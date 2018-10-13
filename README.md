@@ -7,12 +7,13 @@ The configuration is pretty simple
 ```
 ---
 Items:
-  world:
-  - Item: "399:0:1"
-    ItemName: Name
-    Command: Command
-    Executor: Player
-    Enchant: true
+  FirstWorld:
+    '0':
+      Item: '339:1:1'
+      ItemName: Name
+      Command: Command
+      Executor: Player
+      Enchant: true
 Locked Inventory: []
 Cooldown: 0.500000
 ...
