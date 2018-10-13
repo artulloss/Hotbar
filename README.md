@@ -3,54 +3,53 @@
 A simple hotbar plugin!
 #### Configuration
 
-The configuration is pretty simple
+The default configuration is pretty simple
 ```
 ---
 Items:
-  FirstWorld:
-    '0':
-      Item: '339:1:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
+  world: # The default config uses the default world
+    0:
+      Item: "264:1:1"
+      ItemName: Example 1
+      Lore:
+      - These examples will
+      - make commands run
+      - without OP
+      Commands:
+      - command@player
+      - command@here
+      - command@everyone
       Enchant: true
-Locked Inventory: []
-Cooldown: 0.500000
+    8:
+      Item: "264:2:1"
+      ItemName: Example 2
+      Lore:
+      - These examples will
+      - make commands run
+      - with OP
+      Commands:
+      - command@PLAYER
+      - command@HERE
+      - command@EVERYONE
+      - command@console
+      - command@CONSOLE
+      Enchant: false
+Locked Inventory:
+- world
+Cooldown: 2
 ...
+
 ```
 
-While most are pretty self explanatory, please note that Executor who is executing the command, either the player or the console
 
-If you use console you can do {PLAYER} to refer to the player
+You can add as many items and worlds as you'd like by creating more entries with world names.
 
-You can add as many items and worlds as you'd like!
-```
----
-Items:
-  FirstWorld:
-    '0':
-      Item: '339:1:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-  SecondWorld:
-    '0':
-      Item: '339:1:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-    '8':
-      Item: '339:2:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-Locked Inventory: []
-Cooldown: 0.5
-...
-```
+You can add as many commands as you'd like, and there are different @ types, indicating who will execute them (they're inspired by discord)
+
+You can @ a player's IGN to make them execute something, provided they're online, howver you can't make them execute it as OP, what if their name were all caps?
+
+All caps letters means that the command will execute as OP, as explained by the default config
+
 #### Duplicate items
 
 You can deal with duplicate items by using different meta values for them or different counts.
@@ -71,32 +70,7 @@ SecondWorld:
   - Item: "339:1:1" # The second one, in a valid way
   - Item: "339:0:2" # The second one, also a valid way
 ```
-**By Default items go in order of placement in config however you can change that! Remember, arrays start at 0, and so do item slots!**
-```
----
-Items:
-  FirstWorld:
-  - Item: '339:0:1'
-    ItemName: Name
-    Command: Command
-    Executor: Player
-    Enchant: true
-  SecondWorld:
-    '0':
-      Item: '339:0:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-    '8':
-      Item: '339:1:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-Locked Inventory: []
-Cooldown: 0.5
-```
+
 
 #### Locking Inventories
 

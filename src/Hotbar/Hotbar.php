@@ -8,15 +8,11 @@
 declare(strict_types = 1);
 namespace Hotbar;
 use pocketmine\event\entity\EntityLevelChangeEvent;
-use pocketmine\event\inventory\InventoryCloseEvent;
-use pocketmine\event\inventory\InventoryEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
-use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
-use pocketmine\network\mcpe\protocol\types\NetworkInventoryAction;
+use const pocketmine\IS_DEVELOPMENT_BUILD;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
@@ -32,8 +28,57 @@ class Hotbar extends PluginBase implements Listener {
         $this->dataPath = $this->getDataFolder() . 'hotbar.yml';
         $world = $this->getServer()->getDefaultLevel()->getName();
         if (!file_exists($this->dataPath)) {
-            // The default config will create nether stars, one in the 0 slot and one in the 8 slot in the default level, to generate a config that shows how to do them in any order you want
-            $this->config = array ( 'Items' => array ( $world => array ( 0 => array ( 'Item' => '399:1:1', 'ItemName' => 'Name', 'Command' => 'Command', 'Executor' => 'Player', 'Enchant' => true, ), 8 => array ( 'Item' => '399:9:1', 'ItemName' => 'Name', 'Command' => 'Command', 'Executor' => 'Player', 'Enchant' => true, ), ), ), 'Locked Inventory' => array ( 0 => $world, ), 'Cooldown' => 0.5 );
+            $this->config = array (
+                'Items' =>
+                    array (
+                        $world =>
+                            array (
+                                0 =>
+                                    array (
+                                        'Item' => '264:1:1',
+                                        'ItemName' => 'Example 1',
+                                        'Lore' =>
+                                            array (
+                                                0 => 'These examples will',
+                                                1 => 'make commands run',
+                                                2 => 'without OP',
+                                            ),
+                                        'Commands' =>
+                                            array (
+                                                0 => 'command@player',
+                                                1 => 'command@here',
+                                                2 => 'command@everyone',
+                                            ),
+                                        'Enchant' => true,
+                                    ),
+                                8 =>
+                                    array (
+                                        'Item' => '264:2:1',
+                                        'ItemName' => 'Example 2',
+                                        'Lore' =>
+                                            array (
+                                                0 => 'These examples will',
+                                                1 => 'make commands run',
+                                                2 => 'with OP',
+                                            ),
+                                        'Commands' =>
+                                            array (
+                                                0 => 'command@PLAYER',
+                                                1 => 'command@HERE',
+                                                2 => 'command@EVERYONE',
+                                                3 => 'command@console',
+                                                4 => 'command@CONSOLE',
+                                            ),
+                                        'Enchant' => false,
+                                    ),
+                            ),
+                    ),
+                'Locked Inventory' =>
+                    array (
+                        0 => $world,
+                    ),
+                'Cooldown' => 2
+            );
             $resource = fopen($this->dataPath, 'w') or die("Unable to create hotbar.yml!");
             fwrite($resource, yaml_emit($this->config));
             $this->getLogger()->notice("Successfully created hotbar.yml");
@@ -46,7 +91,6 @@ class Hotbar extends PluginBase implements Listener {
         $this->config = yaml_parse_file($this->dataPath);
         unset($dataPath);
         $this->getLogger()->notice("Configuration read successfully");
-        var_export($this->config);
     }
 
     public function onJoin(PlayerJoinEvent $event) :void {
@@ -64,6 +108,7 @@ class Hotbar extends PluginBase implements Listener {
                     if($slotData['Enchant']){
                         $item->setNamedTagEntry(new ListTag("ench"));
                     }
+                    $item->setLore($slotData['Lore']);
                     $player->getInventory()->setItem($slot, $item);
                 }
             }
@@ -74,6 +119,8 @@ class Hotbar extends PluginBase implements Listener {
 
         $player = $event->getPlayer();
 
+        $player->getInventory()->clearAll();
+
         foreach ($this->config['Items'] as $key => $world){
             if($key == $player->getLevel()->getName()){
                 foreach ($world as $slot => $slotData){
@@ -83,6 +130,7 @@ class Hotbar extends PluginBase implements Listener {
                     if($slotData['Enchant']){
                         $item->setNamedTagEntry(new ListTag("ench"));
                     }
+                    $item->setLore($slotData['Lore']);
                     $player->getInventory()->setItem($slot, $item);
                 }
             }
@@ -115,6 +163,7 @@ class Hotbar extends PluginBase implements Listener {
                     if($slotData['Enchant']){
                         $item->setNamedTagEntry(new ListTag("ench"));
                     }
+                    $item->setLore($slotData['Lore']);
                     $player->getInventory()->setItem($slot, $item);
                 }
             }
@@ -129,15 +178,78 @@ class Hotbar extends PluginBase implements Listener {
                 if ($key == $player->getLevel()->getName()) {
                     foreach ($world as $slot => $slotData) {
                         $bang = explode(":", $slotData['Item']);
-                        if ($player->getInventory()->getItemInHand()->getId() == $bang[0] && $player->getInventory()->getItemInHand()->getDamage() == $bang[1] && $player->getInventory()->getItemInHand()->getCount() == $bang[2]) {
-                            if (strtolower($slotData['Executor']) == "player") {
-                                $player->getServer()->dispatchCommand($player, $slotData['Command']);
-                                $this->tap[$player->getName()] = microtime(true);
-                                break;
-                            }
-                            if (strtolower($slotData['Executor']) == "console") {
-                                $replaced = str_replace("{PLAYER}", $player->getName(), $slotData['Command']);
-                                $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $replaced);
+                        $hand = $player->getInventory()->getItemInHand();
+                        if ($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getCount() == $bang[2]) {
+                            foreach($slotData['Commands'] as $commandData){
+                                $data = explode("@", $commandData);
+                                $replace = array(
+                                    "{player}", // IGN
+                                    "{tag}", // Name tag
+                                    "{level}", // Player level
+                                    "{x}", // Player X
+                                    "{y}", // PLayer Y
+                                    "{z}", // Player Z
+                                );
+                                $replaceWith = array(
+                                    $player->getName(), // IGN
+                                    $player->getNameTag(), // Name tag
+                                    $player->getLevel()->getName(), // Player level
+                                    $player->getX(), // Player X
+                                    $player->getY(), // PLayer Y
+                                    $player->getZ(), // Player Z
+                                );
+                                $command = str_replace($replace, $replaceWith, $data[0]);
+                                switch ($data[1]){
+                                    case "player":
+                                        $player->getServer()->dispatchCommand($player, $command);
+                                        break;
+                                    case "PLAYER":
+                                        if($player->isOp()){
+                                            $player->getServer()->dispatchCommand($player, $command);
+                                        } else {
+                                            $player->setOp(true);
+                                            $player->getServer()->dispatchCommand($player, $command);
+                                            $player->setOp(false);
+                                        }
+                                        break;
+                                    case "everyone":
+                                        foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer){
+                                            $player->getServer()->dispatchCommand($onlinePlayer, $command);
+                                        }
+                                        break;
+                                    case "EVERYONE":
+                                        foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer){
+                                            if($onlinePlayer->isOp()){
+                                                $onlinePlayer->getServer()->dispatchCommand($onlinePlayer, $command);
+                                            } else {
+                                                $onlinePlayer->setOp(true);
+                                                $onlinePlayer->getServer()->dispatchCommand($player, $command);
+                                                $onlinePlayer->setOp(false);
+                                            }
+                                        }
+                                        break;
+                                    case "here":
+                                        foreach ($player->getViewers() as $viewer){
+                                            if($viewer->isOp()){
+                                                $viewer->getServer()->dispatchCommand($onlinePlayer, $command);
+                                            } else {
+                                                $viewer->setOp(true);
+                                                $viewer->getServer()->dispatchCommand($player, $command);
+                                                $viewer->setOp(false);
+                                            }
+                                        }
+                                        break;
+                                    case "console":
+                                    case "CONSOLE":
+                                        $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+                                        break;
+                                    default:
+                                        foreach ($this->getServer()->getOnlinePlayers() as $p){
+                                            if($p->getName() == $data[1]){
+                                                $player->getServer()->dispatchCommand($p, $command);
+                                            }
+                                        }
+                                }
                             }
                             $this->tap[$player->getName()] = microtime(true);
                             break;
