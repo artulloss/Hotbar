@@ -71,6 +71,34 @@ SecondWorld:
   - Item: "339:0:2" # The second one, also a valid way
   ```
 
+=======
+**By Default items go in order of placement in config however you can change that! Remember, arrays start at 0, and so do item slots!**
+
+```
+---
+Items:
+  FirstWorld:
+  - Item: '339:0:1'
+    ItemName: Name
+    Command: Command
+    Executor: Player
+    Enchant: true
+  SecondWorld:
+    '0':
+      Item: '339:0:1'
+      ItemName: Name
+      Command: Command
+      Executor: Player
+      Enchant: true
+    '8':
+      Item: '339:1:1'
+      ItemName: Name
+      Command: Command
+      Executor: Player
+      Enchant: true
+Locked Inventory: []
+Cooldown: 0.5
+```
 
 #### Locking Inventories
 
@@ -80,6 +108,7 @@ You may wish to block a player from modifying the hotbar, the "Locked Inventory"
 Locked Inventory:
 - example
 - as  many as you want
+- as many as you want
 ```
 
 #### Cooldown
