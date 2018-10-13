@@ -69,11 +69,8 @@ SecondWorld:
   - Item: "339:0:1" # The second one, this is invalid
   - Item: "339:1:1" # The second one, in a valid way
   - Item: "339:0:2" # The second one, also a valid way
-  ```
-
-=======
+```
 **By Default items go in order of placement in config however you can change that! Remember, arrays start at 0, and so do item slots!**
-
 ```
 ---
 Items:
