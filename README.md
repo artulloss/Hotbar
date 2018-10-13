@@ -103,7 +103,7 @@ You may wish to block a player from modifying the hotbar, the "Locked Inventory"
 ```
 Locked Inventory:
 - example
-- as  many as you want
+- as many as you want
 ```
 
 #### Cooldown
