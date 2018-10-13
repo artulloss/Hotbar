@@ -27,24 +27,27 @@ You can add as many items and worlds as you'd like!
 ---
 Items:
   FirstWorld:
-  - Item: "399:0:1"
-    ItemName: Name
-    Command: Command
-    Executor: Player
-    Enchant: true
+    '0':
+      Item: '339:1:1'
+      ItemName: Name
+      Command: Command
+      Executor: Player
+      Enchant: true
   SecondWorld:
-  - Item: "339:0:1"
-    ItemName: Name
-    Command: Command
-    Executor: Player
-    Enchant: true
-  - Item: "339:0:1"
-    ItemName: Name
-    Command: Command
-    Executor: Player
-    Enchant: true
+    '0':
+      Item: '339:1:1'
+      ItemName: Name
+      Command: Command
+      Executor: Player
+      Enchant: true
+    '8':
+      Item: '339:2:1'
+      ItemName: Name
+      Command: Command
+      Executor: Player
+      Enchant: true
 Locked Inventory: []
-Cooldown: 0.500000
+Cooldown: 0.5
 ...
 ```
 #### Duplicate items
@@ -57,6 +60,8 @@ In the example above, there isn't a conflict between 399:0:1 in the first world 
 
 However there is a conflict between the two 399:0:1's in the second world
 
+I recommend starting at meta 1 for most items, as that way the same item but not in the hotbar won't trigger the items command
+
 Here is an example (The other parts are gone to save space)
 ```
 SecondWorld:
@@ -66,35 +71,6 @@ SecondWorld:
   - Item: "339:0:2" # The second one, also a valid way
   ```
 
-**By Default items go in order of placement in config however you can change that! Remember, arrays start at 0, and so do item slots!**
-
-```
----
----
-Items:
-  FirstWorld:
-  - Item: '339:0:1'
-    ItemName: Name
-    Command: Command
-    Executor: Player
-    Enchant: true
-  SecondWorld:
-    '0':
-      Item: '339:0:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-    '8':
-      Item: '339:1:1'
-      ItemName: Name
-      Command: Command
-      Executor: Player
-      Enchant: true
-Locked Inventory: []
-  Cooldown: 0.5
----
-```
 
 #### Locking Inventories
 

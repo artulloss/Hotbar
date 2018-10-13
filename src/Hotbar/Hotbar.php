@@ -24,13 +24,16 @@ use pocketmine\item\Item;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\nbt\tag\ListTag;
 class Hotbar extends PluginBase implements Listener {
-    public $config = array ('Items' => array ('world' => array (0 => array ('Item' => '399:0:1', 'ItemName' => 'Name', 'Command' => 'Command', 'Executor' => 'Player', 'Enchant' => true,),),),'Locked Inventory' => array("world"),'Cooldown' => 0.5,);
+    public $config;
     private $tap;
     public $dataPath;
     public function onEnable(): void {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->dataPath = $this->getDataFolder() . 'hotbar.yml';
+        $world = $this->getServer()->getDefaultLevel()->getName();
         if (!file_exists($this->dataPath)) {
+            // The default config will create nether stars, one in the 0 slot and one in the 8 slot in the default level, to generate a config that shows how to do them in any order you want
+            $this->config = array ( 'Items' => array ( $world => array ( 0 => array ( 'Item' => '399:1:1', 'ItemName' => 'Name', 'Command' => 'Command', 'Executor' => 'Player', 'Enchant' => true, ), 8 => array ( 'Item' => '399:9:1', 'ItemName' => 'Name', 'Command' => 'Command', 'Executor' => 'Player', 'Enchant' => true, ), ), ), 'Locked Inventory' => array ( 0 => $world, ), 'Cooldown' => 0.5 );
             $resource = fopen($this->dataPath, 'w') or die("Unable to create hotbar.yml!");
             fwrite($resource, yaml_emit($this->config));
             $this->getLogger()->notice("Successfully created hotbar.yml");
@@ -43,6 +46,7 @@ class Hotbar extends PluginBase implements Listener {
         $this->config = yaml_parse_file($this->dataPath);
         unset($dataPath);
         $this->getLogger()->notice("Configuration read successfully");
+        var_export($this->config);
     }
 
     public function onJoin(PlayerJoinEvent $event) :void {
