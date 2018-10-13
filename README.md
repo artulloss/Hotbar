@@ -70,7 +70,6 @@ SecondWorld:
 
 ```
 ---
----
 Items:
   FirstWorld:
   - Item: '339:0:1'
@@ -92,8 +91,7 @@ Items:
       Executor: Player
       Enchant: true
 Locked Inventory: []
-  Cooldown: 0.5
----
+Cooldown: 0.5
 ```
 
 #### Locking Inventories
