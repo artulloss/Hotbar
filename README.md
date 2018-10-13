@@ -46,7 +46,7 @@ You can add as many items and worlds as you'd like by creating more entries with
 
 You can add as many commands as you'd like, and there are different @ types, indicating who will execute them (they're inspired by discord)
 
-You can @ a player's IGN to make them execute something, provided they're online, howver you can't make them execute it as OP, what if their name were all caps?
+You can @ a player's IGN to make them execute something, provided they're online, however you can't make them execute it as OP, what if their name were all caps?
 
 All caps letters means that the command will execute as OP, as explained by the default config
 
