@@ -1,9 +1,9 @@
 [![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
 # Hotbar
-A simple hotbar plugin!
+A simple hotbar plugin! Add items and make them execute commands, on any world!
 #### Configuration
 
-The default configuration is pretty simple
+The default configuration is pretty simple!
 ```
 ---
 Items:
