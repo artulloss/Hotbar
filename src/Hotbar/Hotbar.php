@@ -19,6 +19,8 @@ use pocketmine\event\Listener;
 use pocketmine\item\Item;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\nbt\tag\ListTag;
+use pocketmine\utils\TextFormat;
+
 class Hotbar extends PluginBase implements Listener {
     public $config;
     private $tap;
@@ -179,7 +181,10 @@ class Hotbar extends PluginBase implements Listener {
                     foreach ($world as $slot => $slotData) {
                         $bang = explode(":", $slotData['Item']);
                         $hand = $player->getInventory()->getItemInHand();
-                        if ($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getCount() == $bang[2]) {
+
+                        // ID, DATA, NAME, LORE
+
+                        if ($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getName() == $slotData['ItemName'] && $hand->getLore() == $slotData['Lore']) {
                             foreach($slotData['Commands'] as $commandData){
                                 $data = explode("@", $commandData);
                                 $replace = array(

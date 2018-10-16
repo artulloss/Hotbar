@@ -1,6 +1,5 @@
-
-[![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar) [![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
-<a href="https://poggit.pmmp.io/p/Hotbar"><img src="https://poggit.pmmp.io/shield.state/Hotbar"></a>
+[![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar)
+[![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
 # Hotbar
 A simple hotbar plugin! Add items and make them execute commands, on any world!
 #### Configuration
@@ -52,26 +51,22 @@ You can @ a player's IGN to make them execute something, provided they're online
 
 All caps letters means that the command will execute as OP, as explained by the default config
 
+
+There are also some things you can use to get data about the player for commands, they are as follows:
+
+{player} - In game name
+{tag} - Nametag
+{level} - Level
+{x} - Player X
+{y} - Player Y
+{z} - Player Z
+
+
 #### Duplicate items
 
-You can deal with duplicate items by using different meta values for them or different counts.
+You can deal with duplicate items by using names, lores or damage values!
 
-Duplicate items are only an issue if on the same world
-
-In the example above, there isn't a conflict between 399:0:1 in the first world and the second world
-
-However there is a conflict between the two 399:0:1's in the second world
-
-I recommend starting at meta 1 for most items, as that way the same item but not in the hotbar won't trigger the items command
-
-Here is an example (The other parts are gone to save space)
-```
-SecondWorld:
-  - Item: "339:0:1" # The first item
-  - Item: "339:0:1" # The second one, this is invalid
-  - Item: "339:1:1" # The second one, in a valid way
-  - Item: "339:0:2" # The second one, also a valid way
-```
+Duplicate items are only an issue if on the same world!
 
 
 #### Locking Inventories
