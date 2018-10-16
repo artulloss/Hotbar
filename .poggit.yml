@@ -3,6 +3,6 @@ branches:
 - master
 projects:
   Hotbar:
+    icon: "icon.png"
     path: ""
-    icon: "/icon.png"
 ...
