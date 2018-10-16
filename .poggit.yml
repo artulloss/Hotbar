@@ -4,5 +4,4 @@ branches:
 projects:
   Hotbar:
     path: ""
-    icon: "resources/icon.png"
 ...
