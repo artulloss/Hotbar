@@ -1,6 +1,6 @@
 
-[![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar) [![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
-<a href="https://poggit.pmmp.io/p/Hotbar"><img src="https://poggit.pmmp.io/shield.state/Hotbar"></a>
+[![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar)
+<a href="https://poggit.pmmp.io/p/Hotbar"><img src="https://poggit.pmmp.io/shield.state/Hotbar"></a> [![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
 # Hotbar
 A simple hotbar plugin! Add items and make them execute commands, on any world!
 #### Configuration
