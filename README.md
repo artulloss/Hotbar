@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 982d03d9f74fb7c202163df632fb20bea976cb2b
 [![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar)
 [![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
 # Hotbar
