@@ -8,58 +8,45 @@ The default configuration is pretty simple!
 ```
 ---
 Items:
-  world: # The default config uses the default world
-    0:
-      Item: "264:1:1"
-      ItemName: Example 1
+  world:
+    §rDefault Config!:
+      Item: "399:0:1"
+      Slot: 0
       Lore:
-      - These examples will
-      - make commands run
-      - without OP
+      - §r§9This is the default configuration!
+    #  - §rNext line
       Commands:
-      - command@player
-      - command@here
-      - command@everyone
+      - say This is the default configuration!@console
+      
+      # Replacable things!
+      
+      # {player} - In game name
+      # {tag} - Nametag
+      # {level} - Level
+      # {x} - Player X
+      # {y} - Player Y
+      # {z} - Player Z
+      
+      # Normal Permissions!
+      
+      # @player
+      # @here
+      # @everyone
+      
+      # Run as OP
+      
+      # @PLAYER
+      # @HERE
+      # @EVERYONE
+      
       Enchant: true
-    8:
-      Item: "264:2:1"
-      ItemName: Example 2
-      Lore:
-      - These examples will
-      - make commands run
-      - with OP
-      Commands:
-      - command@PLAYER
-      - command@HERE
-      - command@EVERYONE
-      - command@console
-      - command@CONSOLE
-      Enchant: false
 Locked Inventory:
 - world
-Cooldown: 2
+Cooldown: 0.5
 ...
 
 ```
 
-
-You can add as many items and worlds as you'd like by creating more entries with world names.
-
-You can add as many commands as you'd like, and there are different @ types, indicating who will execute them (they're inspired by discord)
-
-You can @ a player's IGN to make them execute something, provided they're online, however you can't make them execute it as OP, what if their name were all caps?
-
-All caps letters means that the command will execute as OP, as explained by the default config
-
-
-There are also some things you can use to get data about the player for commands, they are as follows:
-
-{player} - In game name
-{tag} - Nametag
-{level} - Level
-{x} - Player X
-{y} - Player Y
-{z} - Player Z
 
 
 #### Duplicate items

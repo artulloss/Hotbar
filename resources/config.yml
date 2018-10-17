@@ -1,0 +1,38 @@
+---
+Items:
+  world:
+    §rDefault Config!:
+      Item: "399:0:1"
+      Slot: 0
+      Lore:
+      - §r§9This is the default configuration!
+    #  - §rNext line
+      Commands:
+      - say This is the default configuration!@console
+      
+      # Replacable things!
+      
+      # {player} - In game name
+      # {tag} - Nametag
+      # {level} - Level
+      # {x} - Player X
+      # {y} - Player Y
+      # {z} - Player Z
+      
+      # Normal Permissions!
+      
+      # @player
+      # @here
+      # @everyone
+      
+      # Run as OP
+      
+      # @PLAYER
+      # @HERE
+      # @EVERYONE
+      
+      Enchant: true
+Locked Inventory:
+- world
+Cooldown: 0.5
+...
