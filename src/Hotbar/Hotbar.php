@@ -41,7 +41,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param string $worldName World the player will receive items in
 	 */
 
-	public function sendItems(Player $player, string $worldName) :void {
+	public function sendItems($player, string $worldName) :void {
 
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
