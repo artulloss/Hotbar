@@ -86,7 +86,10 @@ class Hotbar extends PluginBase implements Listener
 	 */
 
 	public function switchWorld(EntityLevelChangeEvent $event) :void {
-		$this->sendItems($event->getPlayer(), $event->getTarget()->getName());
+		$player = $event->getEntity();
+		if($player instanceof Player){
+			$this->sendItems($player, $event->getTarget()->getName());
+		}
 	}
 
 	/**
