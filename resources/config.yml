@@ -6,33 +6,34 @@ Items:
       Slot: 0
       Lore:
       - §r§9This is the default configuration!
-    #  - §rNext line
       Commands:
-      - say This is the default configuration!@console
-      
-      # Replacable things!
-      
-      # {player} - In game name
-      # {tag} - Nametag
-      # {level} - Level
-      # {x} - Player X
-      # {y} - Player Y
-      # {z} - Player Z
-      
-      # Normal Permissions!
-      
-      # @player
-      # @here
-      # @everyone
-      
-      # Run as OP
-      
-      # @PLAYER
-      # @HERE
-      # @EVERYONE
-      
+      # Example:
+      # - command goes here@type of executor@op (true) or not op (false)
+
+      - say Your name is {player}!@player@true
+
+      # Types of executors
+
+      # Player
+      # Here
+      # Everyone
+      # Console
+      # Player's name, for example ARTulloss (my ign)
+
+      # Replacable stuff
+
+      # {player}  IGN
+      # {tag}     Name tag
+      # {level}   Player level
+      # {x}       Player X
+      # {y}       Player Y
+      # {z}       Player Z
+      # {rx}      Player X (Rounded)
+      # {ry}      Player Y (Rounded)
+      # {rz}      Player Z (Rounded)
+
       Enchant: true
 Locked Inventory:
 - world
-Cooldown: 0.5
+Cooldown: 1
 ...
