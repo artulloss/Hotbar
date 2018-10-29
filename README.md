@@ -4,54 +4,14 @@
 A simple hotbar plugin! Add items and make them execute commands, on any world!
 #### Configuration
 
-The default configuration is pretty simple!
-```
----
-Items:
-  world:
-    §rDefault Config!:
-      Item: "399:0:1"
-      Slot: 0
-      Lore:
-      - §r§9This is the default configuration!
-    #  - §rNext line
-      Commands:
-      - say This is the default configuration!@console
-      
-      # Replacable things!
-      
-      # {player} - In game name
-      # {tag} - Nametag
-      # {level} - Level
-      # {x} - Player X
-      # {y} - Player Y
-      # {z} - Player Z
-      
-      # Normal Permissions!
-      
-      # @player
-      # @here
-      # @everyone
-      
-      # Run as OP
-      
-      # @PLAYER
-      # @HERE
-      # @EVERYONE
-      
-      Enchant: true
-Locked Inventory:
-- world
-Cooldown: 0.5
-...
+The default configuration is pretty simple and is explained using comments!
 
-```
-
+It allows for unlimited commands, multiple worlds, multiple player execution, execution as op and much more!
 
 
 #### Duplicate items
 
-You can deal with duplicate items by using names, lores or damage values!
+You can deal with duplicate items by using different lores or damage values!
 
 Duplicate items are only an issue if on the same world!
 
