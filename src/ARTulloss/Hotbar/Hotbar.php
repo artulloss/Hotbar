@@ -66,7 +66,7 @@ class Hotbar extends PluginBase implements Listener
 					$item->setNamedTagEntry(new ListTag("ench"));
 				}
 				$item->setLore($slotData["Lore"]);
-				$player->getInventory()->setItem($slotData["Slot"], $item);
+				$player->getInventory()->setItem(--$slotData["Slot"], $item);
 			}
 		}
 	}
@@ -96,9 +96,7 @@ class Hotbar extends PluginBase implements Listener
 
 	public function switchWorld(EntityLevelChangeEvent $event) :void {
 		$player = $event->getEntity();
-		if($player instanceof Player){
-			$this->sendItems($player, $event->getTarget()->getName());
-		}
+		if($player instanceof Player) $this->sendItems($player, $event->getTarget()->getName());
 	}
 
 	/**
@@ -111,9 +109,7 @@ class Hotbar extends PluginBase implements Listener
 
 		$player = $event->getPlayer();
 
-		if ($this->isInCooldown($player->getName())) {
-			return;
-		}
+		if ($this->isInCooldown($player->getName())) return;
 
 		$playerWorld = $player->getLevel()->getName();
 
@@ -264,9 +260,7 @@ class Hotbar extends PluginBase implements Listener
 	 */
 
 	public function isInCooldown(string $player) :bool {
-		if(isset($this->cooldown[$player]) && $this->cooldown[$player] < microtime(true)){
-			unset($this->cooldown[$player]);
-		}
+		if(isset($this->cooldown[$player]) && $this->cooldown[$player] < microtime(true)) unset($this->cooldown[$player]);
 		return isset($this->cooldown[$player]);
 	}
 
@@ -288,11 +282,6 @@ class Hotbar extends PluginBase implements Listener
 	 */
 
 	public function moveInventory(InventoryTransactionEvent $event) :void {
-
-		$player = $event->getTransaction()->getSource();
-
-		if(in_array($player->getLevel()->getName(), $this->config["Locked Inventory"])){
-			$event->setCancelled();
-		}
+		if(in_array($event->getTransaction()->getSource()->getLevel()->getName(), $this->config["Locked Inventory"])) $event->setCancelled();
 	}
 }

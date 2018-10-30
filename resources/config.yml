@@ -1,39 +1,154 @@
 ---
+
+ # Item related information goes in here
+
 Items:
-  world:
+  world: # Here is where you put the first world name!
+
+    # This is the start of the first item, use the items name for this!
+    # If you need multiple items with the exact name name, insert §r at
+    # the end of the item(s) name(s) to make them unique, making them
+    # not conflict, but visually equivalent.
+
     §rDefault Config!:
-      Item: "399:0:1"
-      Slot: 0
-      Lore:
+      Item: "399:0:1" # ItemID:ItemMeta:AmountOfItems
+      Slot: 1 # The slot number, starts at 1.
+      Lore: # The items lore
       - §r§9This is the default configuration!
+    # - §r§9A new line!
       Commands:
-      # Example:
-      # - command goes here@type of executor@op (true) or not op (false)
 
-      - say Your name is {player}!@player@true
+      # This is the default command that is run, it tells you to setup this configuration!
 
-      # Types of executors
+      - say Make sure to setup your configuration, {player}!@console@true
 
-      # Player
-      # Here
-      # Everyone
-      # Console
-      # Player's name, for example ARTulloss (my ign)
+      # Command help!
 
-      # Replacable stuff
+          # The first part is the command itself!
+          # The second part (after the first @) is the person who executes it (See Types of Executors)
+          # The third, and final part, is whether or not the command needs to execute as OP
 
-      # {player}  IGN
-      # {tag}     Name tag
-      # {level}   Player level
-      # {x}       Player X
-      # {y}       Player Y
-      # {z}       Player Z
-      # {rx}      Player X (Rounded)
-      # {ry}      Player Y (Rounded)
-      # {rz}      Player Z (Rounded)
+            # But wait? Isn't console already OP?
+
+            # No, it's different from OP as the
+            # console is not a player, however
+            # the plugin will ignore true or false
+            # here, because console commands are
+            # executed with OP automatically
+
+        # Types of Executors - Capitilization insensitive
+
+          # Player - The player who tapped the item
+          # Here - The players looking at the player who tapped the item
+          # Everyone - Everyone online on your server
+          # Console - The server console
+          # Player's name, for example ARTulloss (my ign) (Players names ARE capitilization sensitive)
+
+        # Replacable stuff
+
+          # {player}  IGN of the player
+          # {tag}     Name tag of the player
+          # {level}   The players level
+
+        # The player's position values, not rounded
+
+          # {x}       The players X
+          # {y}       The players Y
+          # {z}       The players Z
+
+    
+          # {rx}      The players X (Rounded)
+          # {ry}      The players Y (Rounded)
+          # {rz}      The players Z (Rounded)
+
+        # Some examples for commonly used situations
+
+          # Warp the player
+
+            # warp THE_WARP_NAME@player@false
+
+            # If the player doesn't have perms for
+            # the warp but you want them to go there
+
+            # warp THE_WARP_NAME@player@true
+
+          # Give the player a kit
+
+            # kit THE_KIT_NAME@player@false
+
+            # If the player doesn't have perms for 
+            # the kit but you want to give them it
+
+            # kit THE_KIT_NAME@player@true
+
+          # Go to Hub / Lobby
+
+            # hub@player@false
+
+            # lobby@player@false
+
+          # Teleport the player to different worlds
+
+            # mw tp WORLD_NAME@player@false
+
+            # If the player doesn't have perms for
+            # /mw but you still want to tp them
+
+            # mw tp WORLD_NAME@player@true      
+
+            # Safer way kind of, using console
+
+            # mw tp WORLD_NAME {player}@console@true
+
+
+      # Would you like your item to have an enchant on it?
 
       Enchant: true
+
+
+   # You can add more items, just make sure the indentation aligns with that of the other item(s)
+
+    §rA second item!: # This is an example showing a second item added
+      Item: "399:0:1"
+      Slot: 1
+      Lore:
+      - §r§9This is the default configuration!
+      - §r§9This demonstates how to add a
+      - §r§9second item to your configuration!
+      Commands:
+      - say This demonstates a second item!@console@true
+      Enchant: true
+
+#     §rA third item!:
+#      Item: "399:0:1"
+#      Slot: 3
+#      Lore:
+#      - §rLORE
+#      Commands:
+#      - PUT COMMAND HERE@player@false
+#      Enchant: true
+
+  # You can also add more worlds, just make sure the indentation aligns with that of the other world(s) and it's not commented out (like this sentence)
+
+#  another world: # This is another worlds name!
+#    §rDefault Config!: # This is another items name, but this is in a different world!
+#      Item: "399:0:1"
+#      Slot: 1
+#      Lore:
+#      - §r§9This is the default configuration!
+#      Commands:
+#      Enchant: true
+
+
+# Here you can put the names of worlds where you don't want the items to be moveable in.
+# I recommend that you only set this in your lobby.
+
 Locked Inventory:
 - world
+# - another world
+
+# The cooldown "fixes" the issue with interactions where Windows 10 spams the interact event
+# I recommend 1 for this, but feel free to make this as low/high as you'd like
+
 Cooldown: 1
 ...
