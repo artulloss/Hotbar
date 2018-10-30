@@ -51,6 +51,7 @@ Duplicate item names are only an issue if on the same world!
 #### Duplicate items
 
 You can deal with duplicate items by using different names, lores or damage values!
+You can deal with duplicate items by using different lores or damage values!
 
 Duplicate items are only an issue if on the same world!
 
