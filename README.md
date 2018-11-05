@@ -92,6 +92,9 @@ Locked Inventory:
 #### Cooldown
 The cooldown is to "fix" the player interact spam, which is a client side bug with Windows 10, I recommend the default value, but you can set it as high/low as you'd like.
 
+#### Demo of this plugin
+To see this plugin in action, you can join my server: versai.pro 19132
+
 #### Support?
 Tweet me [@artulloss](https://twitter.com/artulloss)
 Discord [here](https://discord.versai.pro)
