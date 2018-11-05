@@ -17,11 +17,11 @@ The second type is the Secondary-Hotbars, they aren't given to you automatically
 The configurations for both types of hotbars are identical.
 
 To call a secondary hotbar, have an item execute
-      - r9hotbar (The name of the hotbar goes here) {player}@console@true
+      - hotbar (The name of the hotbar goes here) {player}@console@true
 as one of it's commands.
 
 To call the Worlds hotbar, have an item execute
-      - r9hotbar WORLD {player}@console@true
+      - hotbar WORLD {player}@console@true
 as one of it's commands.
 
 To avoid conflicting issues do not use WORLD as the name of a world or as a hotbar's name.
