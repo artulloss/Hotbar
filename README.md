@@ -67,7 +67,7 @@ These are capitilization sensitive, so make sure to type them as shown here!
 ```
 #### Duplicate item names
 
-For every name that needs to be the same, insert a r at the end of the items name.
+For every name that needs to be the same, insert a color reset at the end of the items name.
 This will make them visually equivalent, but unique and not conflicting.
 
 Duplicate item names are only an issue if on the same world!
@@ -75,9 +75,8 @@ Duplicate item names are only an issue if on the same world!
 #### Duplicate items
 
 You can deal with duplicate items by using different names, lores or damage values!
-You can deal with duplicate items by using different lores or damage values!
 
-Duplicate items are only an issue if on the same world!
+Duplicate items are only an issue if on the same world or secondary hotbar!
 
 
 #### Locking Inventories
