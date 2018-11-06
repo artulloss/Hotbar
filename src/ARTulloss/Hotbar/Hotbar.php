@@ -290,7 +290,6 @@ class Hotbar extends PluginBase implements Listener
 
 			case "player":
 				if ($op && !$player->isOp()) {
-					echo "PLAYER SET AS OP";
 					$player->setOp(true);
 					$server->dispatchCommand($player, $command);
 					$player->setOp(false);
