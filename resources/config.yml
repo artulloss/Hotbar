@@ -2,7 +2,7 @@
 Config Version: 1.0 # Don't modify this unless you know what you're doing!!!
  # Information for Hotbars that will be sent on join / world transfer / respawn will show up here
 
-Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD {player}@console@true"
+Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD {player}@console@false"
   world: # Here is where you put the first world name!
 
     # This is the start of the first item, use the items name for this!
@@ -22,8 +22,8 @@ Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD 
 
       # Most of the time the ending will be @player@false, but this plugin is designed to be flexible to your needs, so you can do a lot with it!
 
-      - say Make sure to setup your configuration, {player}!@console@true
-      - say Each item in the default configuration has information in the lore to help you! Make sure to read everything when setting it up!@console@true
+      - say Make sure to setup your configuration, {player}!@console@false
+      - say Each item in the default configuration has information in the lore to help you! Make sure to read everything when setting it up!@console@false
 
       # Command help!
 
@@ -101,7 +101,7 @@ Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD 
 
             # Safer way kind of, using console
 
-            # mw tp WORLD_NAME {player}@console@true
+            # mw tp WORLD_NAME {player}@console@false
 
 
       # Would you like your item to have an enchant on it?
@@ -119,9 +119,9 @@ Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD 
       - §r§9This demonstates how to add a
       - §r§9second item to your configuration!
       - §r§9Tapping this will call the secondary hotbar "Hotbar"
-      - §r§9The format to call a hotbar is hotbar $theHotbarName {player}@console@true
+      - §r§9The format to call a hotbar is hotbar $theHotbarName {player}@console@false
       Commands:
-      - hotbar Hotbar {player}@console@true
+      - hotbar Hotbar {player}@console@false
       Enchant: true
 
 #     §rA third item!:
@@ -149,17 +149,17 @@ Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD 
 Secondary-Hotbars: # Secondary hotbar stuff goes in here - Format is exactly the same as the Worlds ones
 
   Hotbar: # Here is where you put name of the package of items - you can call it with the command "hotbar PACKAGE {player}" so
-          # in this example you'd call it with "hotbar Hotbar {player}@console@true". The command must be run through the console
+          # in this example you'd call it with "hotbar Hotbar {player}@console@false". The command must be run through the console
     §r§9Another hotbar?!: # The Item's Name
       Item: "399:0:1" # ItemID:ItemMeta:AmountOfItems
       Slot: 1 # The slot number, starts at 1.
       Lore: # The items lore
       - §r§9To make an item that will help you to go back
       - §r§9to a world's default hotbar
-      - §r§9Enter in "hotbar WORLD {player}@console@true"
+      - §r§9Enter in "hotbar WORLD {player}@console@false"
       - §r§9as the command!
       Commands:
-      - say Read the lore for help!@console@true
+      - say Read the lore for help!@console@false
       Enchant: true
 
     §r§9Go back!: # The Item's Name
@@ -167,10 +167,10 @@ Secondary-Hotbars: # Secondary hotbar stuff goes in here - Format is exactly the
       Slot: 9 # The slot number, starts at 1.
       Lore: # The items lore
       - §r§9This executes hotbar WORLD {player} from the console so
-      - §r§9hotbar WORLD {player}@console@true
+      - §r§9hotbar WORLD {player}@console@false
       - §r§9Do not make a world named WORLD or there will be unexpected behavior
       Commands:
-      - hotbar WORLD {player}@console@true
+      - hotbar WORLD {player}@console@false
       Enchant: true
 
 # Here you can put the names of worlds where you don't want the items to be moveable in.

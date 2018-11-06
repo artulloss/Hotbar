@@ -212,7 +212,18 @@ class Hotbar extends PluginBase implements Listener
 
 			$command = $this->replace($player, $command);
 
-			$this->executeCommand((string)$name, (string)$command[0], (string)$command[1], (bool)$command[2]);
+			if(!isset($command[0]) || !isset($command[1]) || !isset($command[2])) {
+				$this->getServer()->getLogger()->critical("[Hotbar] Improper command format!");
+				return;
+			}
+
+			if(strtolower($command[2]) == "false")
+				$op = false;
+			elseif(strtolower($command[2]) == "true")
+				$op = true;
+			else $op = false;
+
+			$this->executeCommand((string)$name, (string)$command[0], (string)$command[1], (bool)$op);
 
 		}
 		$this->addToCooldown($name, $this->config["Cooldown"]);
@@ -269,6 +280,8 @@ class Hotbar extends PluginBase implements Listener
 	public function executeCommand(string $name, string $command, string $sender, bool $op): void
 	{
 
+		var_dump($op);
+
 		$player = $this->getServer()->getPlayer($name);
 
 		$server = $this->getServer();
@@ -277,6 +290,7 @@ class Hotbar extends PluginBase implements Listener
 
 			case "player":
 				if ($op && !$player->isOp()) {
+					echo "PLAYER SET AS OP";
 					$player->setOp(true);
 					$server->dispatchCommand($player, $command);
 					$player->setOp(false);
