@@ -1,7 +1,7 @@
 [![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar)
 [![HitCount](http://hits.dwyl.io/artulloss/Hotbar.svg)](http://hits.dwyl.io/artulloss/Hotbar)
 # Hotbar
-A simple hotbar plugin! Add items and make them execute commands, on any world!
+A versatile and full featured hotbar plugin! Add items and make them execute commands, on any world!
 ## Configuration
 
 The [default configuration](https://github.com/artulloss/Hotbar/blob/master/resources/config.yml) provides lots of help setting up the plugin!
