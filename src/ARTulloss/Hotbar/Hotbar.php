@@ -7,10 +7,12 @@
  */
 declare(strict_types = 1);
 namespace ARTulloss\Hotbar;
+
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -19,50 +21,76 @@ use pocketmine\item\Item;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\nbt\tag\ListTag;
 
+use ARTulloss\HotbarCommand;
+
 class Hotbar extends PluginBase implements Listener
 {
 	private $config;
 	private $cooldown = [];
 
+	public const VERSION = "1.1.3";
+	public const CONFIG_VERSION = 1.0;
+
 	public static $instance;
 
-	public function onLoad(): void{
+	public $using =  [];
+
+	public function onLoad(): void
+	{
 		self::$instance = $this;
 	}
 
-	public static function getInstance(): Hotbar{
+	public static function getInstance(): Hotbar
+	{
 		return self::$instance;
 	}
 
-	public function onEnable() :void {
+	public function onEnable(): void
+	{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->saveDefaultConfig();
 		$this->config = $this->getConfig()->getAll();
+		$this->getServer()->getCommandMap()->register("hotbar", new HotbarCommand\HotbarCommand());
+
+		if(isset($this->config["Config Version"])) {
+			if($this->config["Config Version"] !== Hotbar::CONFIG_VERSION) {
+				$this->getServer()->getLogger()->critical("[Hotbar] The configuration is out of date. Please delete your configuration or figure out how the configuration needs to change. The latest configuration is located here: bit.ly/2QiN2MQ"); // Link to config.yml on github
+				$this->getServer()->getLogger()->critical("Disabling Hotbar...");
+				$this->setEnabled(false);
+			}
+		} else {
+			$this->getServer()->getLogger()->critical("[Hotbar] The configuration version is not found. Please delete your configuration or figure out how the configuration needs to change. The latest configuration is located here: bit.ly/2QiN2MQ");
+			$this->getServer()->getLogger()->critical("Disabling Hotbar...");
+			$this->setEnabled(false);
+		}
+
 
 	}
 
-	public function onDisable() :void {
+	public function onDisable(): void
+	{
 		unset($this->config);
 		unset($cooldown);
-		unset($this->ops);
+		unset($this->using);
 
 	}
 
 	/**
 	 * @param Player $player Player to send items to
-	 * @param string $worldName World the player will receive items in
+	 * @param string $type This is either Secondary-Hotbar or a World's name
+	 * @param string $hotbar
 	 */
 
-	public function sendItems($player, string $worldName) :void {
-
+	public function sendItems($player, string $type, string $hotbar): void
+	{
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
-		if(isset($this->config["Items"][$worldName])){
-			foreach ($this->config["Items"][$worldName] as $itemName => $slotData){
+		if (isset($this->config[$type][$hotbar])) {
+			foreach ($this->config[$type][$hotbar] as $itemName => $slotData) {
 				$bang = explode(":", $slotData["Item"]);
 				$item = Item::get((int)$bang[0], (int)$bang[1], (int)$bang[2]);
 				$item->setCustomName($itemName);
-				if($slotData["Enchant"]){
+				if ($slotData["Enchant"]) {
 					$item->setNamedTagEntry(new ListTag("ench"));
 				}
 				$item->setLore($slotData["Lore"]);
@@ -72,12 +100,26 @@ class Hotbar extends PluginBase implements Listener
 	}
 
 	/**
-	 * Gives player Hotbar on join
+	 * Gives player Hotbar on join and adds to array
 	 * @param $event
 	 */
 
-	public function onJoin(PlayerJoinEvent $event) :void {
-		$this->sendItems($event->getPlayer(), $event->getPlayer()->getLevel()->getName());
+	public function onJoin(PlayerJoinEvent $event): void
+	{
+		$player = $event->getPlayer();
+		$level = $player->getLevel()->getName();
+		$this->setUsing($player->getName(), $level . ":" . "Worlds");
+		$this->sendItems($player, "Worlds", $level);
+	}
+
+	/**
+	 * Removes from array
+	 *
+	 * @param PlayerQuitEvent $event
+	 */
+	public function onLeave(PlayerQuitEvent $event): void
+	{
+		unset($this->using[$event->getPlayer()->getName()]);
 	}
 
 	/**
@@ -85,8 +127,12 @@ class Hotbar extends PluginBase implements Listener
 	 * @param $event
 	 */
 
-	public function onRespawn(PlayerRespawnEvent $event) :void {
-		$this->sendItems($event->getPlayer(), $event->getPlayer()->getLevel()->getName());
+	public function onRespawn(PlayerRespawnEvent $event): void
+	{
+		$player = $event->getPlayer();
+		$level = $event->getPlayer()->getLevel()->getName();
+		$this->setUsing($player->getName(), $level . ":" . "Worlds");
+		$this->sendItems($player, "Worlds", $level);
 	}
 
 	/**
@@ -94,37 +140,57 @@ class Hotbar extends PluginBase implements Listener
 	 * @param $event
 	 */
 
-	public function switchWorld(EntityLevelChangeEvent $event) :void {
+	public function switchWorld(EntityLevelChangeEvent $event): void
+	{
 		$player = $event->getEntity();
-		if($player instanceof Player) $this->sendItems($player, $event->getTarget()->getName());
+		$level = $event->getTarget()->getName();
+		if ($player instanceof Player){
+			$this->setUsing($player->getName(), $level . ":" . "Worlds");
+			$this->sendItems($player, "Worlds", $level);
+		}
+	}
+
+	/**
+	 * @param PlayerInteractEvent $event
+	 */
+
+	public function onInteract(PlayerInteractEvent $event): void
+	{
+		$this->interactFilter($event->getPlayer());
 	}
 
 	/**
 	 * Check if player is holding item in config
-	 * @param $event
+	 * @param Player $player
 	 */
 
-	public function onInteract(PlayerInteractEvent $event) :void
-	{
-
-		$player = $event->getPlayer();
+	public function interactFilter(Player $player) {
 
 		if ($this->isInCooldown($player->getName())) return;
 
-		$playerWorld = $player->getLevel()->getName();
+		$hand = $player->getInventory()->getItemInHand();
 
-		if (isset($this->config["Items"][$playerWorld])) {
+		$using = explode(":", $this->using[$player->getName()]);
 
-			$hand = $player->getInventory()->getItemInHand();
-
-			if (isset($this->config["Items"][$playerWorld][$hand->getCustomName()])) {
-				$bang = explode(":", $this->config["Items"][$playerWorld][$hand->getCustomName()]["Item"]);
-				if ($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getLore() == $this->config["Items"][$playerWorld][$hand->getCustomName()]["Lore"])
+		if (isset($this->config[$using[1]][$using[0]])) {
+			if (isset($this->config[$using[1]][$using[0]][$hand->getCustomName()])) {
+				$bang = explode(":", $this->config[$using[1]][$using[0]][$hand->getCustomName()]["Item"]);
+				if ($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getLore() == $this->config[$using[1]][$using[0]][$hand->getCustomName()]["Lore"])
 					$this->interactAction($player->getName(), $hand);
 			}
 			return;
 		}
+
 	}
+
+	/**
+	 * @param string $name
+	 * @param string $hotbar
+	 */
+	public function setUsing(string $name, string $hotbar) {
+		$this->using[$name] = $hotbar;
+	}
+
 
 	/**
 	 * Actions to do, if all checks out
@@ -133,13 +199,14 @@ class Hotbar extends PluginBase implements Listener
 	 * @param Item $hand
 	 */
 
-	public function interactAction(string $name, Item $hand) :void {
+	public function interactAction(string $name, Item $hand): void
+	{
 
 		$player = $this->getServer()->getPlayer($name);
 
-		$playerWorld = $player->getLevel()->getName();
+		$hotbar = explode(":", $this->using[$name]);
 
-		foreach ($this->config["Items"][$playerWorld][$hand->getCustomName()]["Commands"] as $commandData) {
+		foreach ($this->config[$hotbar[1]][$hotbar[0]][$hand->getCustomName()]["Commands"] as $commandData) {
 
 			$command = explode("@", $commandData);
 
@@ -159,7 +226,8 @@ class Hotbar extends PluginBase implements Listener
 	 * @return array
 	 */
 
-	public function replace($player, array $command) :array {
+	public function replace($player, array $command): array
+	{
 
 		$replace = array(
 			"{player}", // IGN
@@ -198,16 +266,17 @@ class Hotbar extends PluginBase implements Listener
 	 * @param bool $op
 	 */
 
-	public function executeCommand(string $name, string $command, string $sender, bool $op) :void {
+	public function executeCommand(string $name, string $command, string $sender, bool $op): void
+	{
 
 		$player = $this->getServer()->getPlayer($name);
 
 		$server = $this->getServer();
 
-		switch(strtolower($sender)) {
+		switch (strtolower($sender)) {
 
 			case "player":
-				if($op && !$player->isOp()) {
+				if ($op && !$player->isOp()) {
 					$player->setOp(true);
 					$server->dispatchCommand($player, $command);
 					$player->setOp(false);
@@ -216,8 +285,8 @@ class Hotbar extends PluginBase implements Listener
 				$server->dispatchCommand($player, $command);
 				break;
 			case "here":
-				foreach ($player->getViewers() as $viewer){
-					if($op && !$viewer->isOp()) {
+				foreach ($player->getViewers() as $viewer) {
+					if ($op && !$viewer->isOp()) {
 						$viewer->setOp(true);
 						$server->dispatchCommand($viewer, $command);
 						$viewer->setOp(false);
@@ -226,8 +295,8 @@ class Hotbar extends PluginBase implements Listener
 				}
 				break;
 			case "everyone":
-				foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer){
-					if($op && !$onlinePlayer->isOp()) {
+				foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer) {
+					if ($op && !$onlinePlayer->isOp()) {
 						$onlinePlayer->setOp(true);
 						$server->dispatchCommand($onlinePlayer, $command);
 						$onlinePlayer->setOp(false);
@@ -239,16 +308,16 @@ class Hotbar extends PluginBase implements Listener
 				$server->dispatchCommand(new ConsoleCommandSender(), $command);
 				break;
 			default:
-			$p = $this->getServer()->getPlayer($sender);
-			if($p) {
-				if($op && !$p->isOp()) {
-					$p->setOp(true);
+				$p = $this->getServer()->getPlayer($sender);
+				if ($p) {
+					if ($op && !$p->isOp()) {
+						$p->setOp(true);
+						$server->dispatchCommand($p, $command);
+						$p->setOp(false);
+						break;
+					}
 					$server->dispatchCommand($p, $command);
-					$p->setOp(false);
-					break;
 				}
-				$server->dispatchCommand($p, $command);
-			}
 		}
 	}
 
@@ -259,8 +328,9 @@ class Hotbar extends PluginBase implements Listener
 	 * @return bool
 	 */
 
-	public function isInCooldown(string $player) :bool {
-		if(isset($this->cooldown[$player]) && $this->cooldown[$player] < microtime(true)) unset($this->cooldown[$player]);
+	public function isInCooldown(string $player): bool
+	{
+		if (isset($this->cooldown[$player]) && $this->cooldown[$player] < microtime(true)) unset($this->cooldown[$player]);
 		return isset($this->cooldown[$player]);
 	}
 
@@ -271,7 +341,8 @@ class Hotbar extends PluginBase implements Listener
 	 * @param float $duration
 	 */
 
-	public function addToCooldown(string $player, float $duration) :void {
+	public function addToCooldown(string $player, float $duration): void
+	{
 		$this->cooldown[$player] = microtime(true) + $duration;
 	}
 
@@ -281,7 +352,13 @@ class Hotbar extends PluginBase implements Listener
 	 * @param InventoryTransactionEvent $event
 	 */
 
-	public function moveInventory(InventoryTransactionEvent $event) :void {
-		if(in_array($event->getTransaction()->getSource()->getLevel()->getName(), $this->config["Locked Inventory"])) $event->setCancelled();
+	public function moveInventory(InventoryTransactionEvent $event): void
+	{
+		if (in_array($event->getTransaction()->getSource()->getLevel()->getName(), $this->config["Locked Inventory"])) $event->setCancelled();
+	}
+
+	public function getItems(): array
+	{
+		return $this->config["Secondary-Hotbars"];
 	}
 }
