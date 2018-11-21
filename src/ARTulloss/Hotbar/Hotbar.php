@@ -5,15 +5,11 @@
  * Date: 10/12/2018
  * Time: 9:13 AM
  */
+
 declare(strict_types = 1);
 namespace ARTulloss\Hotbar;
 
-use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
@@ -34,7 +30,7 @@ class Hotbar extends PluginBase implements Listener
 	private $config;
 	private $cooldown = [];
 
-	public const VERSION = "1.1.3";
+	public const VERSION = "1.1.4";
 	public const CONFIG_VERSION = 1.0;
 
 	public $using =  [];
@@ -45,6 +41,11 @@ class Hotbar extends PluginBase implements Listener
 		$this->saveDefaultConfig();
 		$this->config = $this->getConfig()->getAll();
 		$this->getServer()->getCommandMap()->register("hotbar", new HotbarCommand($this));
+
+		if(!is_array($this->config))
+			$this->getServer()->getLogger()->critical("[Hotbar] Config is corrupted!");
+		else
+			is_array($this->config["Worlds"]) && $this->config["Secondary-Hotbars"] ? $this->getServer()->getLogger()->info("[Hotbar] Configuration read successfully") : $this->getServer()->getLogger()->critical("[Hotbar] Config is corrupted!");
 
 		if(isset($this->config["Config Version"])) {
 			if($this->config["Config Version"] !== Hotbar::CONFIG_VERSION) {
@@ -57,6 +58,9 @@ class Hotbar extends PluginBase implements Listener
 			$this->getServer()->getLogger()->critical("Disabling Hotbar...");
 			$this->setEnabled(false);
 		}
+
+		$this->getServer()->getPluginManager()->registerEvents(new Observer($this), $this);
+
 	}
 
 	public function onDisable(): void
@@ -65,6 +69,7 @@ class Hotbar extends PluginBase implements Listener
 		unset($cooldown);
 		unset($this->using);
 	}
+
 
 	/**
 	 * @param Player $player Player to send items to
@@ -88,66 +93,6 @@ class Hotbar extends PluginBase implements Listener
 				$player->getInventory()->setItem(--$slotData["Slot"], $item);
 			}
 		}
-	}
-
-	/**
-	 * Gives player Hotbar on join and adds to array
-	 * @param $event
-	 */
-
-	public function onJoin(PlayerJoinEvent $event): void
-	{
-		$player = $event->getPlayer();
-		$level = $player->getLevel()->getName();
-		$this->setUsing($player->getName(), $level . ":" . "Worlds");
-		$this->sendItems($player, "Worlds", $level);
-	}
-
-	/**
-	 * Removes from array
-	 *
-	 * @param PlayerQuitEvent $event
-	 */
-	public function onLeave(PlayerQuitEvent $event): void
-	{
-		unset($this->using[$event->getPlayer()->getName()]);
-	}
-
-	/**
-	 * Gives player Hotbar on respawn
-	 * @param $event
-	 */
-
-	public function onRespawn(PlayerRespawnEvent $event): void
-	{
-		$player = $event->getPlayer();
-		$level = $event->getPlayer()->getLevel()->getName();
-		$this->setUsing($player->getName(), $level . ":" . "Worlds");
-		$this->sendItems($player, "Worlds", $level);
-	}
-
-	/**
-	 * Gives player Hotbar on level change
-	 * @param $event
-	 */
-
-	public function switchWorld(EntityLevelChangeEvent $event): void
-	{
-		$player = $event->getEntity();
-		$level = $event->getTarget()->getName();
-		if ($player instanceof Player){
-			$this->setUsing($player->getName(), $level . ":" . "Worlds");
-			$this->sendItems($player, "Worlds", $level);
-		}
-	}
-
-	/**
-	 * @param PlayerInteractEvent $event
-	 */
-
-	public function onInteract(PlayerInteractEvent $event): void
-	{
-		$this->interactFilter($event->getPlayer());
 	}
 
 	/**

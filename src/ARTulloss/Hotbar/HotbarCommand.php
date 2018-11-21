@@ -55,14 +55,14 @@ class HotbarCommand extends Command implements PluginIdentifiableCommand {
 		}
 
 		if(!isset($args[0]) || !isset($args[1])){
-			$this->getPlugin()->getServer()->getLogger()->notice("Missing an argument");
+			$this->plugin->getServer()->getLogger()->notice("Missing an argument");
 			return;
 		}
 
 		$player = $this->getPlugin()->getServer()->getPlayer($args[1]);
 
 		if(!$player instanceof Player){
-			$this->getPlugin()->getServer()->getLogger()->notice("Player not found");
+			$this->plugin->getServer()->getLogger()->notice("Player not found");
 			return;
 		}
 
