@@ -21,7 +21,13 @@ use pocketmine\item\Item;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\nbt\tag\ListTag;
 
-use ARTulloss\HotbarCommand;
+/**
+ *  _  _  __ _____ __  __  ___
+ * | || |/__\_   _|  \/  \| _ \
+ * | >< | \/ || | | -< /\ | v /
+ * |_||_|\__/ |_| |__/_||_|_|_\
+ *
+ */
 
 class Hotbar extends PluginBase implements Listener
 {
@@ -31,26 +37,14 @@ class Hotbar extends PluginBase implements Listener
 	public const VERSION = "1.1.3";
 	public const CONFIG_VERSION = 1.0;
 
-	public static $instance;
-
 	public $using =  [];
-
-	public function onLoad(): void
-	{
-		self::$instance = $this;
-	}
-
-	public static function getInstance(): Hotbar
-	{
-		return self::$instance;
-	}
 
 	public function onEnable(): void
 	{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->saveDefaultConfig();
 		$this->config = $this->getConfig()->getAll();
-		$this->getServer()->getCommandMap()->register("hotbar", new HotbarCommand\HotbarCommand());
+		$this->getServer()->getCommandMap()->register("hotbar", new HotbarCommand($this));
 
 		if(isset($this->config["Config Version"])) {
 			if($this->config["Config Version"] !== Hotbar::CONFIG_VERSION) {
@@ -63,8 +57,6 @@ class Hotbar extends PluginBase implements Listener
 			$this->getServer()->getLogger()->critical("Disabling Hotbar...");
 			$this->setEnabled(false);
 		}
-
-
 	}
 
 	public function onDisable(): void
@@ -72,7 +64,6 @@ class Hotbar extends PluginBase implements Listener
 		unset($this->config);
 		unset($cooldown);
 		unset($this->using);
-
 	}
 
 	/**
@@ -164,7 +155,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param Player $player
 	 */
 
-	public function interactFilter(Player $player) {
+	public function interactFilter(Player $player): void {
 
 		if ($this->isInCooldown($player->getName())) return;
 
@@ -187,7 +178,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param string $name
 	 * @param string $hotbar
 	 */
-	public function setUsing(string $name, string $hotbar) {
+	public function setUsing(string $name, string $hotbar): void {
 		$this->using[$name] = $hotbar;
 	}
 
@@ -199,8 +190,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param Item $hand
 	 */
 
-	public function interactAction(string $name, Item $hand): void
-	{
+	public function interactAction(string $name, Item $hand): void {
 
 		$player = $this->getServer()->getPlayer($name);
 
@@ -277,10 +267,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param bool $op
 	 */
 
-	public function executeCommand(string $name, string $command, string $sender, bool $op): void
-	{
-
-		var_dump($op);
+	public function executeCommand(string $name, string $command, string $sender, bool $op): void {
 
 		$player = $this->getServer()->getPlayer($name);
 
@@ -341,8 +328,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @return bool
 	 */
 
-	public function isInCooldown(string $player): bool
-	{
+	public function isInCooldown(string $player): bool {
 		if (isset($this->cooldown[$player]) && $this->cooldown[$player] < microtime(true)) unset($this->cooldown[$player]);
 		return isset($this->cooldown[$player]);
 	}
@@ -354,8 +340,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param float $duration
 	 */
 
-	public function addToCooldown(string $player, float $duration): void
-	{
+	public function addToCooldown(string $player, float $duration): void {
 		$this->cooldown[$player] = microtime(true) + $duration;
 	}
 
@@ -365,13 +350,14 @@ class Hotbar extends PluginBase implements Listener
 	 * @param InventoryTransactionEvent $event
 	 */
 
-	public function moveInventory(InventoryTransactionEvent $event): void
-	{
+	public function moveInventory(InventoryTransactionEvent $event): void {
 		if (in_array($event->getTransaction()->getSource()->getLevel()->getName(), $this->config["Locked Inventory"])) $event->setCancelled();
 	}
 
-	public function getItems(): array
-	{
+	/*
+	 * Get Items
+	 */
+	public function getItems(): array {
 		return $this->config["Secondary-Hotbars"];
 	}
 }
