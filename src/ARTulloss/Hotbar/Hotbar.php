@@ -50,13 +50,13 @@ class Hotbar extends PluginBase implements Listener
 		if(isset($this->config["Config Version"])) {
 			if($this->config["Config Version"] !== Hotbar::CONFIG_VERSION) {
 				$this->getServer()->getLogger()->critical("[Hotbar] The configuration is out of date. Please delete your configuration or figure out how the configuration needs to change. The latest configuration is located here: bit.ly/2QiN2MQ"); // Link to config.yml on github
-				$this->getServer()->getLogger()->critical("Disabling Hotbar...");
-				$this->setEnabled(false);
+				$this->getServer()->getPluginManager()->disablePlugin($this);
+				return;
 			}
 		} else {
 			$this->getServer()->getLogger()->critical("[Hotbar] The configuration version is not found. Please delete your configuration or figure out how the configuration needs to change. The latest configuration is located here: bit.ly/2QiN2MQ");
-			$this->getServer()->getLogger()->critical("Disabling Hotbar...");
-			$this->setEnabled(false);
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
 		}
 
 		$this->getServer()->getPluginManager()->registerEvents(new Observer($this), $this);
