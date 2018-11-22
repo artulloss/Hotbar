@@ -16,11 +16,11 @@ The second type is the Secondary-Hotbars, they aren't given to you automatically
 The configurations for both types of hotbars are identical.
 
 To call a secondary hotbar, have an item execute
-      - hotbar (The name of the hotbar goes here) {player}@console@true
+      - hotbar (The name of the hotbar goes here) {player}@console@false
 as one of it's commands.
 
 To call the Worlds hotbar, have an item execute
-      - hotbar WORLD {player}@console@true
+      - hotbar WORLD {player}@console@false
 as one of it's commands.
 
 To avoid conflicting issues do not use WORLD as the name of a world or as a hotbar's name.
@@ -46,7 +46,7 @@ Everyone - Everyone online on your server
 Console - The servers console
 Player's name, for example ARTulloss (my ign) (Players names ARE capitilization sensitive)
 
-The third part of the command formate specifies if you want to have the player run the command as an OP, or have them run it without OP.
+The third part of the command format specifies if you want to have the player run the command as an OP, or have them run it without OP. I recommend leaving this false in most cases unless absolutely needed. If console is executing, ensure it's false because there is no reason at all for OP.
 
 #### Replacable in commands
 You can use these in your commands to make refrences to the player!
