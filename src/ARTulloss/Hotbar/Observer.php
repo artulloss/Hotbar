@@ -26,23 +26,31 @@ use pocketmine\event\entity\EntityLevelChangeEvent;
  *
  */
 
+/**
+ * Class Observer
+ * @package ARTulloss\Hotbar
+ */
 class Observer implements Listener
 {
 
 	private $plugin;
 
-	public function __construct(Hotbar $hotbar)
-	{
-		$this->plugin = $hotbar;
+	/**
+	 * Observer constructor.
+	 *
+	 * @param Hotbar $plugin
+	 */
+	public function __construct(Hotbar $plugin){
+		$this->plugin = $plugin;
 	}
 
 	/**
 	 * Gives player Hotbar on join and adds to array
+	 *
 	 * @param $event
+	 * @priority HIGHEST
 	 */
-
-	public function onJoin(PlayerJoinEvent $event): void
-	{
+	public function onJoin(PlayerJoinEvent $event): void{
 		$player = $event->getPlayer();
 		$level = $player->getLevel()->getName();
 		$this->plugin->setUsing($player->getName(), $level . ":" . "Worlds");
@@ -53,19 +61,19 @@ class Observer implements Listener
 	 * Removes from array
 	 *
 	 * @param PlayerQuitEvent $event
+	 * @priority HIGHEST
 	 */
-	public function onLeave(PlayerQuitEvent $event): void
-	{
+	public function onLeave(PlayerQuitEvent $event): void{
 		unset($this->plugin->using[$event->getPlayer()->getName()]);
 	}
 
 	/**
 	 * Gives player Hotbar on respawn
-	 * @param $event
+	 *
+	 * @param PlayerRespawnEvent $event
+	 * @priority HIGHEST
 	 */
-
-	public function onRespawn(PlayerRespawnEvent $event): void
-	{
+	public function onRespawn(PlayerRespawnEvent $event): void{
 		$player = $event->getPlayer();
 		$level = $event->getPlayer()->getLevel()->getName();
 		$this->plugin->setUsing($player->getName(), $level . ":" . "Worlds");
@@ -74,11 +82,11 @@ class Observer implements Listener
 
 	/**
 	 * Gives player Hotbar on level change
+	 *
 	 * @param $event
+	 * @priority HIGHEST
 	 */
-
-	public function switchWorld(EntityLevelChangeEvent $event): void
-	{
+	public function switchWorld(EntityLevelChangeEvent $event): void{
 		$player = $event->getEntity();
 		$level = $event->getTarget()->getName();
 		if ($player instanceof Player){
@@ -89,10 +97,9 @@ class Observer implements Listener
 
 	/**
 	 * @param PlayerInteractEvent $event
+	 * @priority HIGHEST
 	 */
-
-	public function onInteract(PlayerInteractEvent $event): void
-	{
+	public function onInteract(PlayerInteractEvent $event): void{
 		$this->plugin->interactFilter($event->getPlayer());
 	}
 }

@@ -63,17 +63,9 @@ class Hotbar extends PluginBase implements Listener
 
 	}
 
-	public function onDisable(): void
-	{
-		unset($this->config);
-		unset($cooldown);
-		unset($this->using);
-	}
-
-
 	/**
-	 * @param Player $player Player to send items to
-	 * @param string $type This is either Secondary-Hotbar or a World's name
+	 * @param Player $player - Player to send items to
+	 * @param string $type - This is either Secondary-Hotbar or a World's name
 	 * @param string $hotbar
 	 */
 
@@ -99,7 +91,6 @@ class Hotbar extends PluginBase implements Listener
 	 * Check if player is holding item in config
 	 * @param Player $player
 	 */
-
 	public function interactFilter(Player $player): void {
 
 		if ($this->isInCooldown($player->getName())) return;
@@ -134,7 +125,6 @@ class Hotbar extends PluginBase implements Listener
 	 * @param string $name
 	 * @param Item $hand
 	 */
-
 	public function interactAction(string $name, Item $hand): void {
 
 		$player = $this->getServer()->getPlayer($name);
@@ -171,9 +161,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param array $command
 	 * @return array
 	 */
-
-	public function replace($player, array $command): array
-	{
+	public function replace($player, array $command): array{
 
 		$replace = array(
 			"{player}", // IGN
@@ -211,8 +199,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param string $sender
 	 * @param bool $op
 	 */
-
-	public function executeCommand(string $name, string $command, string $sender, bool $op): void {
+	public function executeCommand(string $name, string $command, string $sender, bool $op): void{
 
 		$player = $this->getServer()->getPlayer($name);
 
@@ -272,8 +259,7 @@ class Hotbar extends PluginBase implements Listener
 	 * @param string $player
 	 * @return bool
 	 */
-
-	public function isInCooldown(string $player): bool {
+	public function isInCooldown(string $player): bool{
 		if (isset($this->cooldown[$player]) && $this->cooldown[$player] < microtime(true)) unset($this->cooldown[$player]);
 		return isset($this->cooldown[$player]);
 	}
@@ -284,7 +270,6 @@ class Hotbar extends PluginBase implements Listener
 	 * @param string $player
 	 * @param float $duration
 	 */
-
 	public function addToCooldown(string $player, float $duration): void {
 		$this->cooldown[$player] = microtime(true) + $duration;
 	}
@@ -294,13 +279,12 @@ class Hotbar extends PluginBase implements Listener
 	 *
 	 * @param InventoryTransactionEvent $event
 	 */
-
 	public function moveInventory(InventoryTransactionEvent $event): void {
 		if (in_array($event->getTransaction()->getSource()->getLevel()->getName(), $this->config["Locked Inventory"])) $event->setCancelled();
 	}
 
-	/*
-	 * Get Items
+	/**
+	 * @return array
 	 */
 	public function getItems(): array {
 		return $this->config["Secondary-Hotbars"];
