@@ -1,4 +1,4 @@
-[![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar)
+[![](https://poggit.pmmp.io/shield.state/Hotbar)](https://poggit.pmmp.io/p/Hotbar) [![](https://poggit.pmmp.io/shield.api/Hotbar)](https://poggit.pmmp.io/p/Hotbar)
 # Hotbar
 A versatile and full featured hotbar plugin! Add items and make them execute commands, on any world!
 ## Configuration
