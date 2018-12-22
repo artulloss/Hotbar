@@ -27,9 +27,11 @@ use pocketmine\utils\TextFormat;
 /**
  * Class HotbarCommand
  * @package ARTulloss\Hotbar
+ * @author ARTulloss
  */
 class HotbarCommand extends Command implements PluginIdentifiableCommand {
 
+	/** @var Hotbar $plugin */
 	private $plugin;
 
 	/**
@@ -37,15 +39,14 @@ class HotbarCommand extends Command implements PluginIdentifiableCommand {
 	 * @param $hotbar
 	 */
 	public function __construct(Hotbar $hotbar) {
-		parent::__construct("hotbar", "For making multiple Hotbars on a world!", null, []);
+		parent::__construct("hotbar", "For making multiple Hotbars on a world!", \null, []);
 		$this->plugin = $hotbar;
 	}
 
 	/**
 	 * @return Plugin
 	 */
-	public function getPlugin(): Plugin
-	{
+	public function getPlugin(): Plugin {
 		return $this->plugin;
 	}
 
@@ -54,7 +55,7 @@ class HotbarCommand extends Command implements PluginIdentifiableCommand {
 	 * @param string $commandLabel
 	 * @param array $args
 	 */
-	public function execute(CommandSender $sender, string $commandLabel, array $args): void{
+	public function execute(CommandSender $sender, string $commandLabel, array $args): void {
 
 		if($sender instanceof Player) {
 			$sender->sendMessage(TextFormat::BLUE . "Hotbar v" . Hotbar::VERSION . " by ARTulloss");

@@ -9,7 +9,7 @@
 declare(strict_types = 1);
 namespace ARTulloss\Hotbar;
 
-
+use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\Player;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -29,10 +29,11 @@ use pocketmine\event\entity\EntityLevelChangeEvent;
 /**
  * Class Observer
  * @package ARTulloss\Hotbar
+ * @author ARTulloss
  */
 class Observer implements Listener
 {
-
+	/** @var Hotbar $plugin */
 	private $plugin;
 
 	/**
@@ -48,9 +49,9 @@ class Observer implements Listener
 	 * Gives player Hotbar on join and adds to array
 	 *
 	 * @param $event
-	 * @priority HIGHEST
+	 * @priority LOW
 	 */
-	public function onJoin(PlayerJoinEvent $event): void{
+	public function onJoin(PlayerJoinEvent $event): void {
 		$player = $event->getPlayer();
 		$level = $player->getLevel()->getName();
 		$this->plugin->setUsing($player->getName(), $level . ":" . "Worlds");
@@ -63,7 +64,7 @@ class Observer implements Listener
 	 * @param PlayerQuitEvent $event
 	 * @priority HIGHEST
 	 */
-	public function onLeave(PlayerQuitEvent $event): void{
+	public function onLeave(PlayerQuitEvent $event): void {
 		unset($this->plugin->using[$event->getPlayer()->getName()]);
 	}
 
@@ -73,7 +74,7 @@ class Observer implements Listener
 	 * @param PlayerRespawnEvent $event
 	 * @priority HIGHEST
 	 */
-	public function onRespawn(PlayerRespawnEvent $event): void{
+	public function onRespawn(PlayerRespawnEvent $event): void {
 		$player = $event->getPlayer();
 		$level = $event->getPlayer()->getLevel()->getName();
 		$this->plugin->setUsing($player->getName(), $level . ":" . "Worlds");
@@ -86,7 +87,7 @@ class Observer implements Listener
 	 * @param $event
 	 * @priority HIGHEST
 	 */
-	public function switchWorld(EntityLevelChangeEvent $event): void{
+	public function switchWorld(EntityLevelChangeEvent $event): void {
 		$player = $event->getEntity();
 		$level = $event->getTarget()->getName();
 		if ($player instanceof Player){
@@ -99,7 +100,16 @@ class Observer implements Listener
 	 * @param PlayerInteractEvent $event
 	 * @priority HIGHEST
 	 */
-	public function onInteract(PlayerInteractEvent $event): void{
+	public function onInteract(PlayerInteractEvent $event): void {
 		$this->plugin->interactFilter($event->getPlayer());
+	}
+
+	/**
+	 * Blocks moving items in specified worlds
+	 *
+	 * @param InventoryTransactionEvent $event
+	 */
+	public function moveInventory(InventoryTransactionEvent $event): void {
+		if (\in_array($event->getTransaction()->getSource()->getLevel()->getName(), $this->plugin->config["Locked Inventory"])) $event->setCancelled();
 	}
 }
