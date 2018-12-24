@@ -49,7 +49,7 @@ class Observer implements Listener
 	 * Gives player Hotbar on join and adds to array
 	 *
 	 * @param $event
-	 * @priority LOW
+	 * @priority HIGHEST
 	 */
 	public function onJoin(PlayerJoinEvent $event): void {
 		$player = $event->getPlayer();
