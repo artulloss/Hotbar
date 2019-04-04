@@ -92,11 +92,12 @@ class Hotbar extends PluginBase
 
 	/**
 	 * Check if player is holding item in config
-	 * @param Player $player
+	 * @param string $player
 	 */
-	public function interactFilter(Player $player): void {
+	public function interactFilter(string $player): void{
+	    $player = $this->getServer()->getPlayerExact($player);
 
-		if ($this->isInCooldown($player->getName())) return;
+	    if($player === null) return;
 
 		$hand = $player->getInventory()->getItemInHand();
 
@@ -130,11 +131,12 @@ class Hotbar extends PluginBase
 	 */
 	public function interactAction(string $name, Item $hand): void {
 
-		$player = $this->getServer()->getPlayer($name);
-
 		$hotbar = \explode(":", $this->using[$name]);
 
-		foreach ($this->config[$hotbar[1]][$hotbar[0]][$hand->getCustomName()]["Commands"] as $commandData) {
+		foreach ($this->config[$hotbar[1]][$hotbar[0]][$hand->getCustomName()]["Commands"] as $commandData){
+            $player = $this->getServer()->getPlayerExact($name);
+
+            if($player === null) continue;
 
 			$command = \explode("@", $commandData);
 
@@ -160,11 +162,11 @@ class Hotbar extends PluginBase
 	/**
 	 * Replace data in command to match individual player
 	 *
-	 * @param $player
+	 * @param Player $player
 	 * @param array $command
 	 * @return array
 	 */
-	public function replace($player, array $command): array{
+	public function replace(Player $player, array $command): array{
 
 		$replace = array(
 			"{player}", // IGN

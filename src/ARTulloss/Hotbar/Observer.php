@@ -17,6 +17,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\scheduler\ClosureTask;
 
 /**
  *  _  _  __ _____ __  __  ___
@@ -99,9 +100,20 @@ class Observer implements Listener
 	/**
 	 * @param PlayerInteractEvent $event
 	 * @priority HIGHEST
+     * @ignoreCancelled TRUE
 	 */
-	public function onInteract(PlayerInteractEvent $event): void {
-		$this->plugin->interactFilter($event->getPlayer());
+	public function onInteract(PlayerInteractEvent $event): void{
+	    $player = $event->getPlayer();
+	    $name = $player->getName();
+
+	    if($this->plugin->isInCooldown($name)){
+	        $event->setCancelled();
+	        return;
+        }
+
+        $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick)use($name): void{
+            $this->plugin->interactFilter($name);
+        }), 1);
 	}
 
 	/**
