@@ -103,15 +103,14 @@ class Hotbar extends PluginBase
 
 		$using = \explode(":", $this->using[$player->getName()]);
 
-		if (isset($this->config[$using[1]][$using[0]])) {
-			if (isset($this->config[$using[1]][$using[0]][$hand->getCustomName()])) {
+		if (isset($this->config[$using[1]][$using[0]])){
+			if(isset($this->config[$using[1]][$using[0]][$hand->getCustomName()])){
 				$bang = \explode(":", $this->config[$using[1]][$using[0]][$hand->getCustomName()]["Item"]);
-				if ($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getLore() == $this->config[$using[1]][$using[0]][$hand->getCustomName()]["Lore"])
+				if($hand->getId() == $bang[0] && $hand->getDamage() == $bang[1] && $hand->getLore() == $this->config[$using[1]][$using[0]][$hand->getCustomName()]["Lore"])
 					$this->interactAction($player->getName(), $hand);
 			}
 			return;
 		}
-
 	}
 
 	/**

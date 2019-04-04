@@ -97,11 +97,11 @@ class Observer implements Listener
 		}
 	}
 
-	/**
-	 * @param PlayerInteractEvent $event
-	 * @priority HIGHEST
+    /**
+     * @param PlayerInteractEvent $event
+     * @priority HIGHEST
      * @ignoreCancelled TRUE
-	 */
+     */
 	public function onInteract(PlayerInteractEvent $event): void{
 	    $player = $event->getPlayer();
 	    $name = $player->getName();
@@ -109,7 +109,7 @@ class Observer implements Listener
 	    if($this->plugin->isInCooldown($name)){
 	        $event->setCancelled();
 	        return;
-        }
+	    }
 
         $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function(int $currentTick)use($name): void{
             $this->plugin->interactFilter($name);
