@@ -26,7 +26,7 @@ This plugin accepts multiple commands per tap, and they will be executed in the 
 Commands are listed in the format of commandToExecute@executor where executor must be either player, op or console.
 
 You can also leave out the @executor part for most commands by specifying a default way for them to be run using the Default-Command-Options part of the config.
-```
+```yaml
 Default-Command-Options: player # or op or console
 ```
 
@@ -47,7 +47,7 @@ These are capitalization sensitive, so make sure to type them as shown here!
 
 You may wish to block a player from modifying the hotbar, the "Locked Inventory" part of the config allows for this:
 
-```
+```yaml
 Locked Inventory:
 - example
 - world
