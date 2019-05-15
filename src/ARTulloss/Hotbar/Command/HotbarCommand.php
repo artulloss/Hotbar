@@ -54,8 +54,6 @@ class HotbarCommand extends PluginCommand {
                 if ($player !== null) {
                     /** @var Main $plugin */
                     $plugin = $this->getPlugin();
-                    if(isset($hotbars[$args[0]]))
-                        echo "\nSET";
                     if ($args[0] === '{world}') {
                         $level = $player->getLevel();
                         $hotbarUser = $plugin->getHotbarUsers()->getHotbarFor($player);
