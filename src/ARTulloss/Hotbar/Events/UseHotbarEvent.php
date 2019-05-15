@@ -43,4 +43,10 @@ class UseHotbarEvent extends Event
     public function getHotbarUser(): HotbarUser{
         return $this->hotbarUser;
     }
+    /**
+     * @return int
+     */
+    public function getSlot(): int{
+        return $this->slot;
+    }
 }
