@@ -33,30 +33,34 @@ use function key;
 
 class Main extends PluginBase
 {
-	public const VERSION = "2.0.0";
-	public const CONFIG_VERSION = 2.0;
+    public const VERSION = "2.0.0";
+    public const CONFIG_VERSION = 2.0;
 
-	/** @var HotbarLevels $hotbarLevels */
-	private $hotbarLevels;
-	/** @var HotbarUserAccessor */
-	private $hotbarUsers;
-	/** @var HotbarInterface[] $hotbars */
-	private $hotbars;
+    /** @var HotbarLevels $hotbarLevels */
+    private $hotbarLevels;
+    /** @var HotbarUserAccessor */
+    private $hotbarUsers;
+    /** @var HotbarInterface[] $hotbars */
+    private $hotbars;
 
-	public function onEnable(): void {
-		$this->saveDefaultConfig();
-		$server = $this->getServer();
-		$server->getCommandMap()->register("hotbar", new HotbarCommand('hotbar', $this));
-		$server->getPluginManager()->registerEvents(new Listener($this), $this);
-		$this->hotbarLevels = new HotbarLevels($this);
-		$this->hotbarUsers = new HotbarUserAccessor();
-		$this->registerHotbars();
-		$this->registerHotbarWorlds();
-	}
-	public function registerHotbars(): void{
-	    foreach ($this->getConfig()->get('Hotbars') as $hotbarName => $hotbarData) {
-	        $itemName = key($hotbarData);
-	        $hotbarData = $hotbarData[$itemName];
+    public function onEnable(): void {
+        $this->saveDefaultConfig();
+        $server = $this->getServer();
+        if($this->getConfig()->get('Config Version') !== self::VERSION) {
+            $this->getLogger()->info('Hotbar config does not match the required version! Please update your configuration!');
+            $server->getPluginManager()->disablePlugin($this);
+        }
+        $server->getCommandMap()->register("hotbar", new HotbarCommand('hotbar', $this));
+        $server->getPluginManager()->registerEvents(new Listener($this), $this);
+        $this->hotbarLevels = new HotbarLevels($this);
+        $this->hotbarUsers = new HotbarUserAccessor();
+        $this->registerHotbars();
+        $this->registerHotbarWorlds();
+    }
+    public function registerHotbars(): void{
+        foreach ($this->getConfig()->get('Hotbars') as $hotbarName => $hotbarData) {
+            $itemName = key($hotbarData);
+            $hotbarData = $hotbarData[$itemName];
             $itemArray = explode(':', $hotbarData['Item']);
 
             if(!isset($itemArray[0]) || !isset($itemArray[1]) || !isset($itemArray[2])) {
@@ -84,22 +88,22 @@ class Main extends PluginBase
             $this->getLogger()->error('Detected empty hotbar! If you want to clear a players inventory please use the /hotbar clear command');
     }
     public function registerHotbarWorlds(): void{
-	    foreach ($this->getConfig()->get('Worlds') as $levelName => $hotbarName) {
-	        $level = $this->getServer()->getLevelByName($levelName);
-	        if($level !== null)
-	            if(isset($this->hotbars[$hotbarName]))
-	                $this->getHotbarLevels()->bindLevelToHotbar($level, $this->hotbars[$hotbarName]);
-	            else
-	                $this->getLogger()->notice("Tried to bind hotbar $hotbarName to world but $hotbarName isn't defined!");
-	        else
-	            $this->getLogger()->error("Invalid level $levelName paired with hotbar $hotbarName");
+        foreach ($this->getConfig()->get('Worlds') as $levelName => $hotbarName) {
+            $level = $this->getServer()->getLevelByName($levelName);
+            if($level !== null)
+                if(isset($this->hotbars[$hotbarName]))
+                    $this->getHotbarLevels()->bindLevelToHotbar($level, $this->hotbars[$hotbarName]);
+                else
+                    $this->getLogger()->notice("Tried to bind hotbar $hotbarName to world but $hotbarName isn't defined!");
+            else
+                $this->getLogger()->error("Invalid level $levelName paired with hotbar $hotbarName");
         }
     }
     /**
      * @return HotbarLevels
      */
     public function getHotbarLevels(): HotbarLevels{
-	    return $this->hotbarLevels;
+        return $this->hotbarLevels;
     }
     /**
      * @return HotbarUserAccessor
