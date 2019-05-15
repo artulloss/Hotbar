@@ -1,187 +1,36 @@
 ---
-Config Version: 1.0 # Don't modify this unless you know what you're doing!!!
- # Information for Hotbars that will be sent on join / world transfer / respawn will show up here
+Config Version: 2.0 # Don't modify this unless you know what you're doing!!!
 
-Worlds: # You can call items in these with the hotbar command! Do "hotbar WORLD {player}@console@false"
-  world: # Here is where you put the first world name!
-
-    # This is the start of the first item, use the items name for this!
-    # If you need multiple items with the exact name name, insert §r at
-    # the end of the item(s) name(s) to make them unique, making them
-    # not conflict, but visually equivalent.
-
+Hotbars:
+  UniqueHotbarName: # Here you put an identifier for each hotbar
     §r§9Default Config!:
-      Item: "399:0:1" # ItemID:ItemMeta:AmountOfItems
-      Slot: 1 # The slot number, starts at 1.
-      Lore: # The items lore
-      - §r§9This is the default configuration!
-    # - §r§9A new line!
+      Item: "399:0:1" # ID:META:AMOUNT
+      Slot: 1 # Slots 1-9
+      Lore: # Written lore on an item
+        - §r§9This is the default configuration!
+       # - §r§9Another line
       Commands:
+        - say WORKING@player # You can choose how you want the command executed!
+        - say THIS COMES FROM CONSOLE@console # This isn't case sensitive
+        - say THIS COMES FROM THE PLAYER AS OP@op
+        - say YOU DON'T HAVE TO SPECIFY THE END # You don't have to specify the end, you can use the Default-Command-Options setting to change what it will fall back on if left out!
+      #  - hotbar {clear} {player} # The hotbar command has the built in {clear} argument to remove a hotbar
+      #  - hotbar HotbarName {player} # Send a player a hotbar, allows for recursive menus where hotbars call other hotbars etc
 
-      # This is the default command that is run, it tells you to setup this configuration!
+Default-Command-Options: player # Rather than specifying this for everything, you can simply just set the default way commands will be executed
 
-      # Most of the time the ending will be @player@false, but this plugin is designed to be flexible to your needs, so you can do a lot with it!
+Worlds: # Here you can specify hotbars above and pair them with worlds
+  world: UniqueHotbarName
 
-      - say Make sure to setup your configuration, {player}!@console@false
-      - say Each item in the default configuration has information in the lore to help you! Make sure to read everything when setting it up!@console@false
-
-      # Command help!
-
-          # The first part is the command itself!
-          # The second part (after the first @) is the person who executes it (See Types of Executors)
-          # The third, and final part, is whether or not the command needs to execute as OP
-
-            # But wait? Isn't console already OP?
-
-            # No, it's different from OP as the
-            # console is not a player, however
-            # the plugin will ignore true or false
-            # here, because console commands are
-            # executed with OP automatically
-
-        # Types of Executors - Capitilization insensitive
-
-          # Player - The player who tapped the item
-          # Here - The players looking at the player who tapped the item
-          # Everyone - Everyone online on your server
-          # Console - The server console
-          # Player's name, for example ARTulloss (my ign) (Players names ARE capitilization sensitive)
-
-        # Replacable stuff
-
-          # {player}  IGN of the player
-          # {tag}     Name tag of the player
-          # {level}   The players level
-
-        # The player's position values, not rounded
-
-          # {x}       The players X
-          # {y}       The players Y
-          # {z}       The players Z
-
-
-          # {rx}      The players X (Rounded)
-          # {ry}      The players Y (Rounded)
-          # {rz}      The players Z (Rounded)
-
-        # Some examples for commonly used situations
-
-          # Warp the player
-
-            # warp THE_WARP_NAME@player@false
-
-            # If the player doesn't have perms for
-            # the warp but you want them to go there
-
-            # warp THE_WARP_NAME@player@true
-
-          # Give the player a kit
-
-            # kit THE_KIT_NAME@player@false
-
-            # If the player doesn't have perms for
-            # the kit but you want to give them it
-
-            # kit THE_KIT_NAME@player@true
-
-          # Go to Hub / Lobby
-
-            # hub@player@false
-
-            # lobby@player@false
-
-          # Teleport the player to different worlds
-
-            # mw tp WORLD_NAME@player@false
-
-            # If the player doesn't have perms for
-            # /mw but you still want to tp them
-
-            # mw tp WORLD_NAME@player@true
-
-            # Safer way kind of, using console
-
-            # mw tp WORLD_NAME {player}@console@false
-
-
-      # Would you like your item to have an enchant on it?
-
-      Enchant: true
-
-
-   # You can add more items, just make sure the indentation aligns with that of the other item(s)
-
-    §r§9A second item!: # This is an example showing a second item added
-      Item: "399:0:1"
-      Slot: 2
-      Lore:
-      - §r§9This is the default configuration!
-      - §r§9This demonstates how to add a
-      - §r§9second item to your configuration!
-      - §r§9Tapping this will call the secondary hotbar "Hotbar"
-      - §r§9The format to call a hotbar is hotbar $theHotbarName {player}@console@false
-      Commands:
-      - hotbar Hotbar {player}@console@false
-      Enchant: true
-
-#     §rA third item!:
-#      Item: "399:0:1"
-#      Slot: 3
-#      Lore:
-#      - §rLORE
-#      Commands:
-#      - PUT COMMAND HERE@player@false
-#      Enchant: true
-
-  # You can also add more worlds, just make sure the indentation aligns with that of the other world(s) and it's not commented out (like this sentence)
-
-#  another world: # This is another worlds name!
-#    §rDefault Config!: # This is another items name, but this is in a different world!
-#      Item: "399:0:1"
-#      Slot: 1
-#      Lore:
-#      - §r§9This is the default configuration!
-#      Commands:
-#      Enchant: true
-
- # Information for Secondary hotbars - They allow you to make multi layer menus using items
-
-Secondary-Hotbars: # Secondary hotbar stuff goes in here - Format is exactly the same as the Worlds ones
-
-  Hotbar: # Here is where you put name of the package of items - you can call it with the command "hotbar PACKAGE {player}" so
-          # in this example you'd call it with "hotbar Hotbar {player}@console@false". The command must be run through the console
-    §r§9Another hotbar?!: # The Item's Name
-      Item: "399:0:1" # ItemID:ItemMeta:AmountOfItems
-      Slot: 1 # The slot number, starts at 1.
-      Lore: # The items lore
-      - §r§9To make an item that will help you to go back
-      - §r§9to a world's default hotbar
-      - §r§9Enter in "hotbar WORLD {player}@console@false"
-      - §r§9as the command!
-      Commands:
-      - say Read the lore for help!@console@false
-      Enchant: true
-
-    §r§9Go back!: # The Item's Name
-      Item: "399:0:1" # ItemID:ItemMeta:AmountOfItems
-      Slot: 9 # The slot number, starts at 1.
-      Lore: # The items lore
-      - §r§9This executes hotbar WORLD {player} from the console so
-      - §r§9hotbar WORLD {player}@console@false
-      - §r§9Do not make a world named WORLD or there will be unexpected behavior
-      Commands:
-      - hotbar WORLD {player}@console@false
-      Enchant: true
-
-# Here you can put the names of worlds where you don't want the items to be moveable in.
+# Here you can put the names of worlds where you don't want the items to be movable in.
 # I recommend that you only set this in your lobby.
 
 Locked Inventory:
-- world
-# - another world
+  - world
+ # - another world
 
 # The cooldown "fixes" the issue with interactions where Windows 10 spams the interact event
-# I recommend 1 for this, but feel free to make this as low/high as you'd like
+# This is in ticks, I recommend 10 ticks
 
-Cooldown: 1
+Cooldown: 10
 ...
