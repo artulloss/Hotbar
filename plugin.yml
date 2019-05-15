@@ -5,3 +5,8 @@ version: 2.0.0
 author: ARTulloss
 website: github.com/artulloss
 description: Hotbar Items!
+
+permissions:
+  hotbar.view:
+    default: op
+    description: Allows a user to run the hotbar command to view a list of all registered hotbars and the worlds they are assigned to

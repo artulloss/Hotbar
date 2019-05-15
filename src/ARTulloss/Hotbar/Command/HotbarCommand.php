@@ -12,10 +12,13 @@ namespace ARTulloss\Hotbar\Command;
 use ARTulloss\Hotbar\Types\HotbarInterface;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
+use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 use ARTulloss\Hotbar\Main;
+use function count;
+
 
 /**
  *  _  _  __ _____ __  __  ___
@@ -29,6 +32,8 @@ use ARTulloss\Hotbar\Main;
 
 class HotbarCommand extends PluginCommand {
 
+    private const MESSAGE = TextFormat::BLUE . 'Hotbar v' . Main::VERSION . ' by ARTulloss';
+
     /**
      * HotbarCommand constructor.
      * @param string $name
@@ -36,42 +41,91 @@ class HotbarCommand extends PluginCommand {
      */
     public function __construct(string $name, Plugin $owner) {
         parent::__construct($name, $owner);
+        $this->setDescription(self::MESSAGE);
+        $this->setUsage('/hotbar {clear} | {list} | {world} {player}');
     }
 
     /**
-	 * @param CommandSender $sender
-	 * @param string $commandLabel
-	 * @param array $args
-	 */
-	public function execute(CommandSender $sender, string $commandLabel, array $args): void{
+     * @param CommandSender $sender
+     * @param string $commandLabel
+     * @param array $args
+     */
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void{
+        if($sender instanceof Player && !$sender->hasPermission('hotbar.view')) {
+            $sender->sendMessage(self::MESSAGE);
+            return;
+        }
+        $this->executePrivileged($sender, $args);
+    }
+    /**
+     * @param CommandSender $sender
+     * @param array $args
+     */
+    public function executePrivileged(CommandSender $sender, array $args): void{
+        $server = $sender->getServer();
+        if(isset($args[0])) {
 
-		if($sender instanceof Player) {
-			$sender->sendMessage(TextFormat::BLUE . 'Hotbar v' . Main::VERSION . ' by ARTulloss');
-		} else {
-            $server = $sender->getServer();
-            if(isset($args[0]) && isset($args[1])) {
-                $player = $server->getPlayer($args[1]);
-                if ($player !== null) {
-                    /** @var Main $plugin */
-                    $plugin = $this->getPlugin();
-                    if ($args[0] === '{world}') {
+            /** @var Main $plugin */
+            $plugin = $this->getPlugin();
+
+            if(isset($args[1]))
+                $player = $server->getPlayerExact($args[1]);
+
+            if(isset($player) && $player !== null) {
+                switch ($args[0]) {
+                    case '{world}':
                         $level = $player->getLevel();
                         $hotbarUser = $plugin->getHotbarUsers()->getHotbarFor($player);
                         $hotbar = $plugin->getHotbarLevels()->getHotbarForLevel($level);
                         $hotbarUser->setHotbar($hotbar);
-                    } elseif ($args[0] === '{clear}') {
+                        break;
+                    case '{clear}':
                         $player->getInventory()->clearAll();
                         $player->getArmorInventory()->clearAll();
                         $plugin->getHotbarUsers()->remove($player);
-                    } elseif (($hotbars = $plugin->getHotbars()) && isset($hotbars[$args[0]])) {
+                        break;
+                    case ($hotbars = $plugin->getHotbars()) && isset($hotbars[$args[0]]):
                         /** @var HotbarInterface $hotbar */
                         $hotbar = $hotbars[$args[0]];
                         $plugin->getHotbarUsers()->assign($player, $hotbar);
-                    } else
-                        $plugin->getLogger()->notice("Unknown hotbar name $args[0]");
-                } else
-                    $server->getLogger()->notice('Player ' . $args[1] . ' not found!');
+                        break;
+                    default:
+                        $sender->sendMessage(TextFormat::RED . "Unknown hotbar name $args[0]");
+                }
+                return;
             }
-		}
-	}
+            switch ($args[0]) {
+                case '{list}':
+                    $hasHotbars = false;
+                    $hotbarNames = array_keys($plugin->getHotbars());
+                    if(count($hotbarNames) !== 0) {
+                        $sender->sendMessage('Hotbars:');
+                        foreach ($hotbarNames as $hotbarName)
+                            $sender->sendMessage(TextFormat::BLUE . $hotbarName);
+                        $hasHotbars = true;
+                    }
+
+                    $levelHotbars = $plugin->getHotbarLevels()->getAll();
+
+                    if(count($levelHotbars) !== 0) {
+                        $sender->sendMessage('Hotbars and Levels: ');
+                        foreach ($levelHotbars as $levelName => $hotbar) {
+                            $sender->sendMessage(TextFormat::BLUE . $hotbar->getName() . " on $levelName");
+                        }
+                        $hasHotbars = true;
+                    }
+
+                    if($hasHotbars)
+                        return;
+                    $sender->sendMessage('There are no hotbars registered!');
+                    return;
+                default:
+                    if(isset($args[1]))
+                        $sender->sendMessage(TextFormat::RED . "Player $args[1] not found!");
+                    else
+                        throw new InvalidCommandSyntaxException();
+            }
+        } else
+            throw new InvalidCommandSyntaxException();
+    }
 }

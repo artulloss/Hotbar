@@ -9,6 +9,9 @@ declare(strict_types = 1);
 
 namespace ARTulloss\Hotbar\Events;
 
+use pocketmine\event\Event;
+use pocketmine\event\inventory\InventoryPickupArrowEvent;
+use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener as PMListener;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
@@ -21,6 +24,8 @@ use pocketmine\scheduler\ClosureTask;
 use ARTulloss\Hotbar\Main;
 use pocketmine\Player;
 use function in_array;
+use function array_values;
+
 
 /**
  *  _  _  __ _____ __  __  ___
@@ -129,8 +134,32 @@ class Listener implements PMListener
 	 */
 	public function moveInventory(InventoryTransactionEvent $event): void{
 	    $player = $event->getTransaction()->getSource();
-	    $levelName = $player->getLevel()->getName();
-		if (in_array($levelName, $this->plugin->getConfig()->get('Locked Inventory'), true) && $this->plugin->getHotbarUsers()->getHotbarFor($player))
-		    $event->setCancelled();
+        $this->lock($player, $player->getLevel(), $event);
 	}
+    /**
+     * @param InventoryPickupItemEvent $event
+     */
+	public function onPickupItem(InventoryPickupItemEvent $event) {
+        $player = array_values($event->getViewers())[0]; // TODO Replace with array_keys_first for PHP 7.3
+        if($player instanceof Player)
+            $this->lock($player, $player->getLevel(), $event);
+    }
+    /**
+     * @param InventoryPickupArrowEvent $event
+     */
+    public function onPickupArrow(InventoryPickupArrowEvent $event) {
+        $player = array_values($event->getViewers())[0]; // TODO Replace with array_keys_first for PHP 7.3
+        if($player instanceof Player)
+            $this->lock($player, $player->getLevel(), $event);
+    }
+    /**
+     * @param Player $player
+     * @param Level $level
+     * @param Event $event
+     */
+    public function lock(Player $player, Level $level, Event $event): void{
+        $levelName = $level->getName();
+        if (in_array($levelName, $this->plugin->getConfig()->get('Locked Inventory'), true) && $this->plugin->getHotbarUsers()->getHotbarFor($player))
+            $event->setCancelled();
+    }
 }

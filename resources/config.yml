@@ -1,6 +1,4 @@
 ---
-Config Version: 2.0 # Don't modify this unless you know what you're doing!!!
-
 Hotbars:
   UniqueHotbarName: # Here you put an identifier for each hotbar
     §r§9Default Config!:
@@ -8,29 +6,34 @@ Hotbars:
       Slot: 1 # Slots 1-9
       Lore: # Written lore on an item
         - §r§9This is the default configuration!
-       # - §r§9Another line
+      # - §r§9Another line
       Commands:
         - say WORKING@player # You can choose how you want the command executed!
         - say THIS COMES FROM CONSOLE@console # This isn't case sensitive
         - say THIS COMES FROM THE PLAYER AS OP@op
-        - say YOU DON'T HAVE TO SPECIFY THE END # You don't have to specify the end, you can use the Default-Command-Options setting to change what it will fall back on if left out!
-      #  - hotbar {clear} {player} # The hotbar command has the built in {clear} argument to remove a hotbar
+        - say YOU DON'T HAVE TO SPECIFY THE END # You don't have to specify the end, you can use the Default-Command-Options setting to change what it will default to
+      #  - hotbar {clear} {player} # The hotbar command has the built in {clear} argument to remove a hotbar - This will allow them to move their inventory as well
       #  - hotbar HotbarName {player} # Send a player a hotbar, allows for recursive menus where hotbars call other hotbars etc
 
 Default-Command-Options: player # Rather than specifying this for everything, you can simply just set the default way commands will be executed
 
 Worlds: # Here you can specify hotbars above and pair them with worlds
-  world: UniqueHotbarName
+  Spawn: UniqueHotbarName
 
 # Here you can put the names of worlds where you don't want the items to be movable in.
 # I recommend that you only set this in your lobby.
 
 Locked Inventory:
-  - world
- # - another world
+  - Spawn
+# - another world
 
 # The cooldown "fixes" the issue with interactions where Windows 10 spams the interact event
 # This is in ticks, I recommend 10 ticks
 
 Cooldown: 10
+
+# Don't modify this unless you update the plugin and it says the configuration needs to be updated
+# In that case, copy this from the updated configuration and make the necessary changes to your configuration
+
+Config Version: Yf;+3+ue<_em_4Z
 ...

@@ -45,7 +45,7 @@ These are capitalization sensitive, so make sure to type them as shown here!
 
 #### Locking Inventories
 
-You may wish to block a player from modifying the hotbar, the "Locked Inventory" part of the config allows for this:
+You may wish to block a player from modifying their inventory when they have a hotbar, the "Locked Inventory" part of the config allows for this:
 
 ```yaml
 Locked Inventory:
@@ -53,9 +53,15 @@ Locked Inventory:
 - world
 ```
 
+Locked inventories are unable to have items moved in them, and players with locked inventories can't pickup items or arrows.
+
 *Note that items will be locked until the Hotbar is removed from the player.*
 
-#### Removing hotbars
+#### The Hotbar Command
+
+Previously, the hotbar command could only be used by the console, however now there is "hotbar" permission that allows a user to access the command.
+
+There are a few uses of the hotbar command.
 
 To remove a hotbar simply type the command
 ```
@@ -63,6 +69,20 @@ hotbar {clear} {player}
 ```
 
 where player is the players name. The brackets around clear are to make sure you don't name a world that by mistake, in which case it will clear rather than send the hotbar. This will also unlock the players inventory and allow them to move items.
+
+To send a hotbar to a player you can use the command like so
+
+```
+hotbar {hotbarName} {player}
+```
+
+Where {hotbarName} represents the name of the hotbar and {player} is the players name (leave out the brackets here)
+
+You are also able to list all hotbars using the list argument:
+
+```
+hotbar {list}
+```
 
 #### Cooldown
 The cooldown is to "fix" the player interact spam bug, which is a client side issue on Windows 10, I recommend the default value, but you can set it as high/low as you'd like.

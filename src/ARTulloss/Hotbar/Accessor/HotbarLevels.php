@@ -27,7 +27,7 @@ class HotbarLevels
 {
     /** @var Main $main */
     private $main;
-    /** @var HotbarInterface $levelHotbars */
+    /** @var HotbarInterface[] $levelHotbars */
     private $levelHotbars;
 
     /**
@@ -63,5 +63,11 @@ class HotbarLevels
         if(isset($this->levelHotbars[$levelName]))
             return $this->levelHotbars[$levelName];
         return null;
+    }
+    /**
+     * @return HotbarInterface[]
+     */
+    public function getAll(): array{
+        return $this->levelHotbars;
     }
 }

@@ -44,4 +44,8 @@ interface HotbarInterface
      * @param int $slot
      */
     public function execute(Player $player, int $slot): void;
+    /**
+     * @return string
+     */
+    public function getName(): string;
 }

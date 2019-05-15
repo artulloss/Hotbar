@@ -16,6 +16,7 @@ use ARTulloss\Hotbar\Events\Listener;
 use ARTulloss\Hotbar\Factory\HotbarFactory;
 use ARTulloss\Hotbar\Types\CommandHotbar;
 use ARTulloss\Hotbar\Types\HotbarInterface;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\item\Item;
 use function explode;
@@ -33,8 +34,8 @@ use function key;
 
 class Main extends PluginBase
 {
-	public const VERSION = "2.0.0";
-	public const CONFIG_VERSION = 2.0;
+	public const VERSION = '2.0.0';
+	public const CONFIG_VERSION = 'Yf;+3+ue<_em_4Z';
 
 	/** @var HotbarLevels $hotbarLevels */
 	private $hotbarLevels;
@@ -46,9 +47,10 @@ class Main extends PluginBase
 	public function onEnable(): void {
 		$this->saveDefaultConfig();
         $server = $this->getServer();
-        if($this->getConfig()->get('Config Version') !== self::VERSION) {
-		    $this->getLogger()->info('Hotbar config does not match the required version! Please update your configuration!');
+        if($this->getConfig()->get('Config Version') !== self::CONFIG_VERSION) {
+		    $this->getLogger()->info('Hotbar config does not match the required version! Please update your configuration to continue using Hotbar!');
 		    $server->getPluginManager()->disablePlugin($this);
+		    return;
         }
 		$server->getCommandMap()->register("hotbar", new HotbarCommand('hotbar', $this));
 		$server->getPluginManager()->registerEvents(new Listener($this), $this);
@@ -67,8 +69,11 @@ class Main extends PluginBase
                 $this->getLogger()->error("Detected malformed item in $hotbarName hotbar! Make sure that you use the format ID:META:COUNT.");
                 continue;
             }
+
             $item = Item::get((int)$itemArray[0], (int)$itemArray[1], (int)$itemArray[2]);
             $item->setCustomName($itemName);
+            $item->setLore($hotbarData['Lore']);
+            $item->setNamedTagEntry(new ListTag('ench'));
             $items[$hotbarData['Slot']] = $item;
             $commands = $hotbarData['Commands'];
             $slot = $hotbarData['Slot'];
@@ -76,7 +81,7 @@ class Main extends PluginBase
         }
         if(isset($items))
             if(isset($hotbarName)) {
-                $this->hotbars[$hotbarName] = HotbarFactory::make('command', $items);
+                $this->hotbars[$hotbarName] = HotbarFactory::make('command', $hotbarName, $items);
                 foreach ($hotbarCommands ?? [] as $slot => $commands) {
                     /** @var CommandHotbar $hotbar */
                     $hotbar = $this->hotbars[$hotbarName];

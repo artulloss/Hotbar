@@ -28,16 +28,20 @@ abstract class Hotbar implements HotbarInterface
 {
     /** @var Item[] $items */
     private $items;
+    /** @var string $name */
+    private $name;
     protected const INVALID_SLOT = 'Slot must be between 1 and 9';
+
     /**
      * Hotbar constructor.
+     * @param string $hotbar
      * @param Item[] $items - Send items in format of Slot => Item
      */
-    public function __construct(array $items)
-    {
+    public function __construct(string $hotbar, array $items) {
         foreach (array_keys($items) as $key) {
             $this->checkSlot($key);
         }
+        $this->name = $hotbar;
         $this->items = $items;
     }
     /**
@@ -73,5 +77,11 @@ abstract class Hotbar implements HotbarInterface
      */
     public function getItems(): array{
         return $this->items;
+    }
+    /**
+     * @return string
+     */
+    public function getName(): string{
+        return $this->name;
     }
 }
