@@ -16,8 +16,6 @@ Worlds: # Here you can specify hotbars above and pair them with worlds
 
 If you don't have them automatically appear, you can still call them by calling the command `hotbar {identifier} {player}`
 
-*Note that this command can only be called by the console*
-
 #### Command format
 
 For every item you need to add commands in order to do things.
