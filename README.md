@@ -14,7 +14,7 @@ Worlds: # Here you can specify hotbars above and pair them with worlds
   world: UniqueHotbarName
  ```
 
-If you don't have them automatically appear, you can still call them by calling the command `hotbar {identifier} {player}`
+If you don't have them automatically appear, you can still call them by calling the command `hotbar {hotbarName} {player}`
 
 #### Command format
 
