@@ -44,7 +44,6 @@ class Main extends PluginBase
 	private $hotbars;
 
 	public function onEnable(): void {
-		$this->saveDefaultConfig();
         $server = $this->getServer();
         if($this->getConfig()->get('Config Version') !== self::CONFIG_VERSION) {
 		    $this->getLogger()->info('Hotbar config does not match the required version! Please update your configuration to continue using Hotbar!');

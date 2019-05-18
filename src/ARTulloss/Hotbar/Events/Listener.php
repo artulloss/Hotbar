@@ -113,16 +113,16 @@ class Listener implements PMListener
 	public function onInteract(PlayerInteractEvent $event): void{
 	    $player = $event->getPlayer();
 	    $hotbarUser = $this->plugin->getHotbarUsers()->getHotbarFor($player);
-
 	    if($hotbarUser !== null) {
             if($this->plugin->getServer()->getTick() - $hotbarUser->getLastUsage() <= $this->plugin->getConfig()->get('Cooldown')) {
                 $event->setCancelled();
             } else {
                 $hotbar = $hotbarUser->getHotbar();
+                $index = $player->getInventory()->getHeldItemIndex();
                 // Hack, remove in 4.0.0 ?
-                $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($hotbarUser, $player, $hotbar): void{
-                    $hotbar->execute($player, $player->getInventory()->getHeldItemIndex());
-                    (new UseHotbarEvent($hotbarUser, $player->getInventory()->getHeldItemIndex()))->call();
+                $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($hotbarUser, $player, $hotbar, $index): void{
+                    $hotbar->execute($player, $index);
+                    (new UseHotbarEvent($hotbarUser, $index))->call();
                 }), 0);
                 $hotbarUser->updateLastUsage();
             }
