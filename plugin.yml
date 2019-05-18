@@ -5,6 +5,7 @@ version: 2.0.2
 author: ARTulloss
 website: github.com/artulloss
 description: Hotbar Items!
+loadbefore: [FloatingHotbar]
 
 permissions:
   hotbar.view:
