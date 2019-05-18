@@ -33,7 +33,7 @@ use function explode;
 
 class Main extends PluginBase
 {
-	public const VERSION = '2.0.0';
+	public const VERSION = '2.0.2';
 	public const CONFIG_VERSION = '3r8E{UGUDgX)~gba';
 
 	/** @var HotbarLevels $hotbarLevels */
