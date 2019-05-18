@@ -20,7 +20,6 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\item\Item;
 use function explode;
-use function key;
 
 /**
  *  _  _  __ _____ __  __  ___
@@ -35,7 +34,7 @@ use function key;
 class Main extends PluginBase
 {
 	public const VERSION = '2.0.0';
-	public const CONFIG_VERSION = 'Yf;+3+ue<_em_4Z';
+	public const CONFIG_VERSION = '3r8E{UGUDgX)~gba';
 
 	/** @var HotbarLevels $hotbarLevels */
 	private $hotbarLevels;
@@ -60,27 +59,30 @@ class Main extends PluginBase
 		$this->registerHotbarWorlds();
 	}
 	public function registerHotbars(): void{
-	    foreach ($this->getConfig()->get('Hotbars') as $hotbarName => $hotbarData) {
-	        $itemName = key($hotbarData);
-	        $hotbarData = $hotbarData[$itemName];
-            $itemArray = explode(':', $hotbarData['Item']);
+	    $hotbars = $this->getConfig()->get('Hotbars');
+	    foreach ($hotbars as $hotbarName => $hotbar) {
+	        $items = [];
+	        $hotbarCommands = [];
+	        foreach ($hotbar as $itemName => $itemData) {
+                $itemArray = explode(':', $itemData['Item']);
 
-            if(!isset($itemArray[0]) || !isset($itemArray[1]) || !isset($itemArray[2])) {
-                $this->getLogger()->error("Detected malformed item in $hotbarName hotbar! Make sure that you use the format ID:META:COUNT.");
-                continue;
+                if(!isset($itemArray[0]) || !isset($itemArray[1]) || !isset($itemArray[2])) {
+                    $this->getLogger()->error("Detected malformed item in $hotbarName hotbar! Make sure that you use the format ID:META:COUNT.");
+                    continue;
+                }
+
+                $item = Item::get((int)$itemArray[0], (int)$itemArray[1], (int)$itemArray[2]);
+                $item->setCustomName($itemName);
+                $item->setLore($itemData['Lore']);
+                if($itemData['Enchant'])
+                    $item->setNamedTagEntry(new ListTag('ench'));
+                $items[$itemData['Slot']] = $item;
+                $commands = $itemData['Commands'];
+                $slot = $itemData['Slot'];
+                $hotbarCommands[$slot] = $commands;
             }
 
-            $item = Item::get((int)$itemArray[0], (int)$itemArray[1], (int)$itemArray[2]);
-            $item->setCustomName($itemName);
-            $item->setLore($hotbarData['Lore']);
-            $item->setNamedTagEntry(new ListTag('ench'));
-            $items[$hotbarData['Slot']] = $item;
-            $commands = $hotbarData['Commands'];
-            $slot = $hotbarData['Slot'];
-            $hotbarCommands[$slot] = $commands;
-        }
-        if(isset($items))
-            if(isset($hotbarName)) {
+	        if($items !== []) {
                 $this->hotbars[$hotbarName] = HotbarFactory::make('command', $hotbarName, $items);
                 foreach ($hotbarCommands ?? [] as $slot => $commands) {
                     /** @var CommandHotbar $hotbar */
@@ -88,9 +90,8 @@ class Main extends PluginBase
                     $hotbar->setSlotCommands($slot, $commands);
                 }
             } else
-                $this->getLogger()->error('Undefined hotbar name!');
-        else
-            $this->getLogger()->error('Detected empty hotbar! If you want to clear a players inventory please use the /hotbar clear command');
+                $this->getLogger()->error('Detected empty hotbar! If you want to clear a players inventory please use the /hotbar clear command');
+        }
     }
     public function registerHotbarWorlds(): void{
 	    foreach ($this->getConfig()->get('Worlds') as $levelName => $hotbarName) {

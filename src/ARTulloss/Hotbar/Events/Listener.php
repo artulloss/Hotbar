@@ -134,32 +134,32 @@ class Listener implements PMListener
 	 */
 	public function moveInventory(InventoryTransactionEvent $event): void{
 	    $player = $event->getTransaction()->getSource();
-        $this->lock($player, $player->getLevel(), $event);
+        $this->lock($player, $event);
 	}
     /**
      * @param InventoryPickupItemEvent $event
      */
-	public function onPickupItem(InventoryPickupItemEvent $event) {
+	public function onPickupItem(InventoryPickupItemEvent $event): void{
         $player = array_values($event->getViewers())[0]; // TODO Replace with array_keys_first for PHP 7.3
         if($player instanceof Player)
-            $this->lock($player, $player->getLevel(), $event);
+            $this->lock($player, $event);
     }
     /**
      * @param InventoryPickupArrowEvent $event
      */
-    public function onPickupArrow(InventoryPickupArrowEvent $event) {
+    public function onPickupArrow(InventoryPickupArrowEvent $event): void{
         $player = array_values($event->getViewers())[0]; // TODO Replace with array_keys_first for PHP 7.3
         if($player instanceof Player)
-            $this->lock($player, $player->getLevel(), $event);
+            $this->lock($player, $event);
     }
     /**
      * @param Player $player
-     * @param Level $level
      * @param Event $event
      */
-    public function lock(Player $player, Level $level, Event $event): void{
+    public function lock(Player $player, Event $event): void{
+        $level = $player->getLevel();
         $levelName = $level->getName();
-        if (in_array($levelName, $this->plugin->getConfig()->get('Locked Inventory'), true) && $this->plugin->getHotbarUsers()->getHotbarFor($player))
+        if (in_array($levelName, $this->plugin->getConfig()->get('Locked Inventory'), true) && $this->plugin->getHotbarUsers()->getHotbarFor($player) !== null)
             $event->setCancelled();
     }
 }

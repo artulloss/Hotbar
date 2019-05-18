@@ -56,7 +56,7 @@ class CommandHotbar extends Hotbar
 
                     if(!isset($commandData[1])) {
                         if(!isset($this->defaults))
-                            $this->defaults = $server->getPluginManager()->getPlugin('Hotbar')->getConfig()->get('Default-Command-Options');
+                            $this->defaults = $server->getPluginManager()->getPlugin('Hotbar')->getConfig()->get('Default Command Options');
                         $commandData[1] = $this->defaults;
                     }
                     $executor = strtolower($commandData[1]);

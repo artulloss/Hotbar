@@ -107,7 +107,7 @@ class HotbarCommand extends PluginCommand {
 
                     $levelHotbars = $plugin->getHotbarLevels()->getAll();
 
-                    if(count($levelHotbars) !== 0) {
+                    if($levelHotbars !== null && count($levelHotbars) !== 0) {
                         $sender->sendMessage('Hotbars and Levels: ');
                         foreach ($levelHotbars as $levelName => $hotbar) {
                             $sender->sendMessage(TextFormat::BLUE . $hotbar->getName() . " on $levelName");

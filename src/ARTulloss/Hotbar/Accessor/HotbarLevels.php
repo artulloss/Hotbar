@@ -65,9 +65,9 @@ class HotbarLevels
         return null;
     }
     /**
-     * @return HotbarInterface[]
+     * @return HotbarInterface[]|null
      */
-    public function getAll(): array{
+    public function getAll(): ?array{
         return $this->levelHotbars;
     }
 }

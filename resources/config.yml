@@ -15,7 +15,7 @@ Hotbars:
       #  - hotbar {clear} {player} # The hotbar command has the built in {clear} argument to remove a hotbar - This will allow them to move their inventory as well
       #  - hotbar HotbarName {player} # Send a player a hotbar, allows for recursive menus where hotbars call other hotbars etc
 
-Default-Command-Options: player # Rather than specifying this for everything, you can simply just set the default way commands will be executed
+Default Command Options: player # Rather than specifying this for everything, you can simply just set the default way commands will be executed
 
 Worlds: # Here you can specify hotbars above and pair them with worlds
   Spawn: UniqueHotbarName
@@ -35,5 +35,7 @@ Cooldown: 10
 # Don't modify this unless you update the plugin and it says the configuration needs to be updated
 # In that case, copy this from the updated configuration and make the necessary changes to your configuration
 
-Config Version: Yf;+3+ue<_em_4Z
+# Please change Default-Command-Options to Default Command Options, this is a consistancy fix for the configuration.
+
+Config Version: 3r8E{UGUDgX)~gba
 ...

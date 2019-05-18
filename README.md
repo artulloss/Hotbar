@@ -14,7 +14,9 @@ Worlds: # Here you can specify hotbars above and pair them with worlds
   world: UniqueHotbarName
  ```
 
-If you don't have them automatically appear, you can still call them by calling the command `hotbar {hotbarName} {player}`
+If you don't have them automatically appear, you can still call them by calling the command `hotbar {identifier} {player}`
+
+*Note that this command can only be called by the console*
 
 #### Command format
 
@@ -23,9 +25,9 @@ This plugin accepts multiple commands per tap, and they will be executed in the 
 
 Commands are listed in the format of commandToExecute@executor where executor must be either player, op or console.
 
-You can also leave out the @executor part for most commands by specifying a default way for them to be run using the Default-Command-Options part of the config.
+You can also leave out the @executor part for most commands by specifying a default way for them to be run using the Default Command Options part of the config.
 ```yaml
-Default-Command-Options: player # or op or console
+Default CommandOptions: player # or op or console
 ```
 
 #### Replaceable in commands
@@ -46,7 +48,7 @@ These are capitalization sensitive, so make sure to type them as shown here!
 You may wish to block a player from modifying their inventory when they have a hotbar, the "Locked Inventory" part of the config allows for this:
 
 ```yaml
-Locked Inventory:
+Locked-Inventory:
 - example
 - world
 ```
