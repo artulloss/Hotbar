@@ -93,14 +93,14 @@ class Main extends PluginBase
         }
     }
     public function registerHotbarWorlds(): void{
+	    $server = $this->getServer();
 	    foreach ($this->getConfig()->get('Worlds') as $levelName => $hotbarName) {
-	        $level = $this->getServer()->getLevelByName($levelName);
-	        if($level !== null)
-	            if(isset($this->hotbars[$hotbarName]))
-	                $this->getHotbarLevels()->bindLevelToHotbar($level, $this->hotbars[$hotbarName]);
-	            else
-	                $this->getLogger()->notice("Tried to bind hotbar $hotbarName to world but $hotbarName isn't defined!");
-	        else
+	        if($server->loadLevel($hotbarName) && ($level = $server->getLevelByName($hotbarName)) && $level !== null) {
+                if(isset($this->hotbars[$hotbarName]))
+                    $this->getHotbarLevels()->bindLevelToHotbar($level, $this->hotbars[$hotbarName]);
+                else
+                    $this->getLogger()->notice("Tried to bind hotbar $hotbarName to world but $hotbarName isn't defined!");
+            } else
 	            $this->getLogger()->error("Invalid level $levelName paired with hotbar $hotbarName");
         }
     }

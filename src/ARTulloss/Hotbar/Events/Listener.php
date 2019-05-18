@@ -118,13 +118,18 @@ class Listener implements PMListener
                 $event->setCancelled();
             } else {
                 $hotbar = $hotbarUser->getHotbar();
-                $index = $player->getInventory()->getHeldItemIndex();
-                // Hack, remove in 4.0.0 ?
-                $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($hotbarUser, $player, $hotbar, $index): void{
-                    $hotbar->execute($player, $index);
-                    (new UseHotbarEvent($hotbarUser, $index))->call();
-                }), 0);
-                $hotbarUser->updateLastUsage();
+                $inv = $player->getInventory();
+                $index = $inv->getHeldItemIndex();
+                $items = $hotbar->getItems();
+                if(isset($items[$index + 1]) && ($hotbarItem = $items[$index + 1]) && ($item = $inv->getItem($index))
+                    && $item->getName() === $hotbarItem->getName() && $item->getId() === $hotbarItem->getId() && $item->getDamage() === $hotbarItem->getDamage()) {
+                    // Hack, remove in 4.0.0 ?
+                    $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($hotbarUser, $player, $hotbar, $index): void {
+                        $hotbar->execute($player, $index);
+                        (new UseHotbarEvent($hotbarUser, $index))->call();
+                    }), 0);
+                    $hotbarUser->updateLastUsage();
+                }
             }
         }
 	}

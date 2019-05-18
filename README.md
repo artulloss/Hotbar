@@ -95,6 +95,14 @@ This plugin comes with a full API and allows for the creation of Hotbars that us
 $player->getServer()->getPluginManager()->getPlugin('Hotbar')->getHotbarUsers()->assign($player, $hotbar);
 ```
 
+#### Plugin extensions
+
+Make a plugin that uses the API from this? Open an issue and I'll add it to the list
+
+So far:
+
+- [FloatingHotbar](https://github.com/artulloss/FloatingHotbar) makes the item you're holding float in front of you
+
 #### Demo of this plugin
 To see this plugin in action, you can join my server: versai.pro 19132
 
