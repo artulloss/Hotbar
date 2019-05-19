@@ -2,10 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: Adam
- * Date: 4/8/2019
- * Time: 9:18 PM
+ * Date: 5/18/2019
+ * Time: 3:45 PM
  */
 declare(strict_types=1);
+
 
 namespace ARTulloss\Hotbar\Events;
 
@@ -23,31 +24,22 @@ use pocketmine\event\Event;
  * @link https://github.com/artulloss
  */
 
-class UseHotbarEvent extends Event
+class LoseHotbarEvent extends Event
 {
-    /** @var HotbarUser $hotbarUser */
+    /** @var HotbarUser */
     private $hotbarUser;
-    /** @var int $slot */
-    private $slot;
+
     /**
-     * UseHotbarEvent constructor.
+     * LoseHotbarEvent constructor.
      * @param HotbarUser $hotbarUser
-     * @param int $slot
      */
-    public function __construct(HotbarUser $hotbarUser, int $slot) {
+    public function __construct(HotbarUser $hotbarUser) {
         $this->hotbarUser = $hotbarUser;
-        $this->slot = $slot;
     }
     /**
      * @return HotbarUser
      */
     public function getHotbarUser(): HotbarUser{
         return $this->hotbarUser;
-    }
-    /**
-     * @return int
-     */
-    public function getSlot(): int{
-        return $this->slot;
     }
 }

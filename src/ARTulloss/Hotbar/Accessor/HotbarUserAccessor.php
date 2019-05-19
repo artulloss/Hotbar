@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace ARTulloss\Hotbar\Accessor;
 
+use ARTulloss\Hotbar\Events\LoseHotbarEvent;
 use ARTulloss\Hotbar\HotbarUser;
 use ARTulloss\Hotbar\Types\HotbarInterface;
 use pocketmine\Player;
+use ReflectionException;
 
 /**
  *  _  _  __ _____ __  __  ___
@@ -52,14 +54,21 @@ class HotbarUserAccessor
     /**
      * Remove a hotbar user, clears inventory if they have a hotbar assigned
      * @param Player $player
+     * @param bool $clear
+     * @param bool $event
      * @return bool
+     * @throws ReflectionException
      */
-    public function remove(Player $player): bool{
+    public function remove(Player $player, $clear = true, $event = true): bool{
         $name = $player->getName();
         $return = isset($this->users[$name]);
+        if($return) {
+            if($clear)
+                $player->getInventory()->clearAll();
+            if($event)
+                (new LoseHotbarEvent($this->users[$name]))->call();
+        }
         unset($this->users[$name]);
-        if($return)
-            $player->getInventory()->clearAll();
         return $return;
     }
     /**

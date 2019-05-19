@@ -19,6 +19,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\scheduler\ClosureTask;
 use ARTulloss\Hotbar\Main;
@@ -107,12 +108,12 @@ class Listener implements PMListener
     }
     /**
      * @param PlayerInteractEvent $event
-     * @priority HIGHEST
-     * @ignoreCancelled TRUE
+     * @throws \ReflectionException
      */
 	public function onInteract(PlayerInteractEvent $event): void{
 	    $player = $event->getPlayer();
-	    $hotbarUser = $this->plugin->getHotbarUsers()->getHotbarFor($player);
+	    $users = $this->plugin->getHotbarUsers();
+	    $hotbarUser = $users->getHotbarFor($player);
 	    if($hotbarUser !== null) {
             if($this->plugin->getServer()->getTick() - $hotbarUser->getLastUsage() <= $this->plugin->getConfig()->get('Cooldown')) {
                 $event->setCancelled();
@@ -121,14 +122,17 @@ class Listener implements PMListener
                 $inv = $player->getInventory();
                 $index = $inv->getHeldItemIndex();
                 $items = $hotbar->getItems();
-                if(isset($items[$index + 1]) && ($hotbarItem = $items[$index + 1]) && ($item = $inv->getItem($index))
-                    && $item->getName() === $hotbarItem->getName() && $item->getId() === $hotbarItem->getId() && $item->getDamage() === $hotbarItem->getDamage()) {
+                $item = $inv->getItem($index);
+                if(isset($items[$index + 1]) && ($hotbarItem = $items[$index + 1]) && $item->getName() === $hotbarItem->getName()
+                    && $item->getId() === $hotbarItem->getId() && $item->getDamage() === $hotbarItem->getDamage()) {
                     // Hack, remove in 4.0.0 ?
                     $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function (int $currentTick) use ($hotbarUser, $player, $hotbar, $index): void {
                         $hotbar->execute($player, $index);
                         (new UseHotbarEvent($hotbarUser, $index))->call();
                     }), 0);
                     $hotbarUser->updateLastUsage();
+                } elseif($item->getId() !== Item::AIR) {
+                    $users->remove($player, false);
                 }
             }
         }

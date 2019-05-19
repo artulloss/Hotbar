@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 namespace ARTulloss\Hotbar\Command;
 
+use ARTulloss\Hotbar\Events\LoseHotbarEvent;
 use ARTulloss\Hotbar\Types\HotbarInterface;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
@@ -44,11 +45,11 @@ class HotbarCommand extends PluginCommand {
         $this->setDescription(self::MESSAGE);
         $this->setUsage('/hotbar {clear} | {list} | {world} {player}');
     }
-
     /**
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param array $args
+     * @throws \ReflectionException
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args): void{
         if($sender instanceof Player && !$sender->hasPermission('hotbar.view')) {
@@ -60,6 +61,7 @@ class HotbarCommand extends PluginCommand {
     /**
      * @param CommandSender $sender
      * @param array $args
+     * @throws \ReflectionException
      */
     public function executePrivileged(CommandSender $sender, array $args): void{
         $server = $sender->getServer();
@@ -72,10 +74,10 @@ class HotbarCommand extends PluginCommand {
                 $player = $server->getPlayerExact($args[1]);
 
             if(isset($player) && $player !== null) {
+                $hotbarUser = $plugin->getHotbarUsers()->getHotbarFor($player);
                 switch ($args[0]) {
                     case '{world}':
                         $level = $player->getLevel();
-                        $hotbarUser = $plugin->getHotbarUsers()->getHotbarFor($player);
                         $hotbar = $plugin->getHotbarLevels()->getHotbarForLevel($level);
                         $hotbarUser->setHotbar($hotbar);
                         break;
