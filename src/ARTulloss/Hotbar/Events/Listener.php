@@ -10,6 +10,7 @@ declare(strict_types = 1);
 namespace ARTulloss\Hotbar\Events;
 
 use pocketmine\event\Event;
+use pocketmine\event\inventory\InventoryEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener as PMListener;
@@ -19,6 +20,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\inventory\PlayerInventory;
 use pocketmine\item\Item;
 use pocketmine\level\Level;
 use pocketmine\scheduler\ClosureTask;
@@ -26,6 +28,7 @@ use ARTulloss\Hotbar\Main;
 use pocketmine\Player;
 use function in_array;
 use function array_values;
+use ReflectionException;
 
 
 /**
@@ -85,6 +88,7 @@ class Listener implements PMListener
 	 * Gives player Hotbar on level change
 	 * @param $event
 	 * @priority HIGHEST
+     * @throws ReflectionException
 	 */
 	public function switchWorld(EntityLevelChangeEvent $event): void{
 		$player = $event->getEntity();
@@ -97,6 +101,7 @@ class Listener implements PMListener
      * Sends a player the hotbar for a world, or not if none exists
      * @param Player $player
      * @param Level $level
+     * @throws ReflectionException
      */
 	private function bindPlayerLevelHotbar(Player $player, Level $level): void{
         $hotbar = $this->plugin->getHotbarLevels()->getHotbarForLevel($level);
@@ -149,17 +154,22 @@ class Listener implements PMListener
      * @param InventoryPickupItemEvent $event
      */
 	public function onPickupItem(InventoryPickupItemEvent $event): void{
-        $player = array_values($event->getViewers())[0]; // TODO Replace with array_keys_first for PHP 7.3
-        if($player instanceof Player)
-            $this->lock($player, $event);
+        $this->handleInventoryEvent($event);
     }
     /**
      * @param InventoryPickupArrowEvent $event
      */
     public function onPickupArrow(InventoryPickupArrowEvent $event): void{
-        $player = array_values($event->getViewers())[0]; // TODO Replace with array_keys_first for PHP 7.3
-        if($player instanceof Player)
-            $this->lock($player, $event);
+        $this->handleInventoryEvent($event);
+    }
+
+    private function handleInventoryEvent(InventoryEvent $event): void{
+        $inv = $event->getInventory();
+        if($inv instanceof PlayerInventory) {
+            $player = $inv->getHolder();
+            if($player instanceof Player)
+                $this->lock($player, $event);
+        }
     }
     /**
      * @param Player $player
