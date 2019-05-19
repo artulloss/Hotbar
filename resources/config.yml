@@ -14,6 +14,7 @@ Hotbars:
         - say YOU DON'T HAVE TO SPECIFY THE END # You don't have to specify the end, you can use the Default-Command-Options setting to change what it will default to
       #  - hotbar {clear} {player} # The hotbar command has the built in {clear} argument to remove a hotbar - This will allow them to move their inventory as well
       #  - hotbar HotbarName {player} # Send a player a hotbar, allows for recursive menus where hotbars call other hotbars etc
+      Enchant: true # Do want the item to be enchanted?
 
 Default Command Options: player # Rather than specifying this for everything, you can simply just set the default way commands will be executed
 
@@ -35,7 +36,8 @@ Cooldown: 10
 # Don't modify this unless you update the plugin and it says the configuration needs to be updated
 # In that case, copy this from the updated configuration and make the necessary changes to your configuration
 
-# Please change Default-Command-Options to Default Command Options, this is a consistancy fix for the configuration.
+# Make sure you add in the Enchant part for each item, previously this was missing, it was a mistake.
+# Please change Default-Command-Options to Default Command Options, this is a consistency fix for the configuration.
 
 Config Version: 3r8E{UGUDgX)~gba
 ...
