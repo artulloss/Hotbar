@@ -1,4 +1,10 @@
 ---
+
+#  _  _  __ _____ __  __  ___
+# | || |/__\_   _|  \/  \| _ \
+# | >< | \/ || | | -< /\ | v /
+# |_||_|\__/ |_| |__/_||_|_|_\
+
 Hotbars:
   UniqueHotbarName: # Here you put an identifier for each hotbar
     §r§9Default Config!:
@@ -11,7 +17,7 @@ Hotbars:
         - say WORKING@player # You can choose how you want the command executed!
         - say THIS COMES FROM CONSOLE@console # This isn't case sensitive
         - say THIS COMES FROM THE PLAYER AS OP@op
-        - say YOU DON'T HAVE TO SPECIFY THE END # You don't have to specify the end, you can use the Default-Command-Options setting to change what it will default to
+        - say YOU DON'T HAVE TO SPECIFY THE END # You don't have to specify the end, you can use the Default Command Options setting to change what it will default to
       #  - hotbar {clear} {player} # The hotbar command has the built in {clear} argument to remove a hotbar - This will allow them to move their inventory as well
       #  - hotbar HotbarName {player} # Send a player a hotbar, allows for recursive menus where hotbars call other hotbars etc
       Enchant: true # Do want the item to be enchanted?
