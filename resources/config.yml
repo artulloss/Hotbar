@@ -27,8 +27,9 @@ Default Command Options: player # Rather than specifying this for everything, yo
 Worlds: # Here you can specify hotbars above and pair them with worlds
   Spawn: UniqueHotbarName
 
-# Here you can put the names of worlds where you don't want the items to be movable in.
-# I recommend that you only set this in your lobby.
+# Here you can put the names of worlds where you don't want the items to be movable in / be able to be dropped or picked up
+# This has changed from the 1.x versions, now the Hotbar will break when detecting invalid items (the player got a kit or something)
+# so this is useable on any world with a hotbar, not just the lobby.
 
 Locked Inventory:
   - Spawn
