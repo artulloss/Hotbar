@@ -33,7 +33,7 @@ use function explode;
 
 class Main extends PluginBase
 {
-	public const VERSION = '2.0.2';
+	public const VERSION = '2.0.3';
 	public const CONFIG_VERSION = '3r8E{UGUDgX)~gba';
 
 	/** @var HotbarLevels $hotbarLevels */
@@ -95,11 +95,11 @@ class Main extends PluginBase
     public function registerHotbarWorlds(): void{
 	    $server = $this->getServer();
 	    foreach ($this->getConfig()->get('Worlds') as $levelName => $hotbarName) {
-	        if($server->loadLevel($hotbarName) && ($level = $server->getLevelByName($hotbarName)) && $level !== null) {
+	        if($server->loadLevel($levelName) && ($level = $server->getLevelByName($levelName)) && $level !== null) {
                 if(isset($this->hotbars[$hotbarName]))
                     $this->getHotbarLevels()->bindLevelToHotbar($level, $this->hotbars[$hotbarName]);
                 else
-                    $this->getLogger()->notice("Tried to bind hotbar $hotbarName to world but $hotbarName isn't defined!");
+                    $this->getLogger()->notice("Tried to bind hotbar $hotbarName to world but $levelName isn't defined!");
             } else
 	            $this->getLogger()->error("Invalid level $levelName paired with hotbar $hotbarName");
         }

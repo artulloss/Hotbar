@@ -56,16 +56,19 @@ class Listener implements PMListener
 	 * Gives player Hotbar on join if they have one assigned
 	 * @param $event
 	 * @priority HIGHEST
+     * @throws ReflectionException
 	 */
 	public function onJoin(PlayerJoinEvent $event): void{
 		$player = $event->getPlayer();
 		$level = $player->getLevel();
-		$this->bindPlayerLevelHotbar($player, $level);
+		if(!$player->isClosed()) // If kicked
+		    $this->bindPlayerLevelHotbar($player, $level);
 	}
 	/**
      * Deregister them from plugin
 	 * @param PlayerQuitEvent $event
 	 * @priority HIGHEST
+     * @throws ReflectionException
 	 */
 	public function onLeave(PlayerQuitEvent $event): void{
 	    $player = $event->getPlayer();
@@ -78,6 +81,7 @@ class Listener implements PMListener
 	 * Gives player Hotbar on respawn
 	 * @param PlayerRespawnEvent $event
 	 * @priority HIGHEST
+     * @throws ReflectionException
 	 */
 	public function onRespawn(PlayerRespawnEvent $event): void{
 	    $player = $event->getPlayer();
@@ -93,7 +97,7 @@ class Listener implements PMListener
 	public function switchWorld(EntityLevelChangeEvent $event): void{
 		$player = $event->getEntity();
 		$level = $event->getTarget();
-		if ($player instanceof Player){
+		if ($player instanceof Player) {
 		    $this->bindPlayerLevelHotbar($player, $level);
 		}
 	}
