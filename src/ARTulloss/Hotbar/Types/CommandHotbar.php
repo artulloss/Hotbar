@@ -44,11 +44,11 @@ class CommandHotbar extends Hotbar
             foreach ($commands as $command) {
                 $commandData = explode('@', $command);
                 if (isset($commandData[0])) {
-
+                    $level = $player->getLevel();
                     $command = $this->substituteString($commandData[0], [
                         'player' => $player->getName(),
                         'tag' => $player->getNameTag(),
-                        'level' => $player->getLevel()->getName(),
+                        'level' => $level !== null ? $level->getName() : 'Error',
                         'x' => $player->getX(),
                         'y' => $player->getY(),
                         'z' => $player->getZ()
