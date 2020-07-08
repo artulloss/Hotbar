@@ -46,7 +46,7 @@ class CommandHotbar extends Hotbar
                 if (isset($commandData[0])) {
                     $level = $player->getLevel();
                     $command = $this->substituteString($commandData[0], [
-                        'player' => $player->getName(),
+                        'player' => '"' . $player->getName() . '"',
                         'tag' => $player->getNameTag(),
                         'level' => $level !== null ? $level->getName() : 'Error',
                         'x' => $player->getX(),
