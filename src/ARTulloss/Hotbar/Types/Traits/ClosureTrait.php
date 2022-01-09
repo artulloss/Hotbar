@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace ARTulloss\Hotbar\Types\Traits;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\Utils;
 use Closure;
 
@@ -25,8 +25,8 @@ use Closure;
 
 trait ClosureTrait
 {
-    /** @var Closure $closure */
-    private $closure;
+
+    private Closure $closure;
     /**
      * @param Closure $closure
      */

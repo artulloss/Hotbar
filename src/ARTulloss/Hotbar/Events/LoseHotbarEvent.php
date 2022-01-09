@@ -26,8 +26,7 @@ use pocketmine\event\Event;
 
 class LoseHotbarEvent extends Event
 {
-    /** @var HotbarUser */
-    private $hotbarUser;
+    private HotbarUser $hotbarUser;
 
     /**
      * LoseHotbarEvent constructor.

@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace ARTulloss\Hotbar\Types;
 
+use ARTulloss\Hotbar\Main;
 use ARTulloss\Hotbar\Types\Traits\CommandTrait;
-use pocketmine\command\ConsoleCommandSender;
-use pocketmine\Player;
+use pocketmine\console\ConsoleCommandSender;
+use pocketmine\permission\DefaultPermissions;
+use pocketmine\player\Player;
 use function str_ireplace;
 use function strtolower;
 use function explode;
@@ -30,8 +32,7 @@ class CommandHotbar extends Hotbar
 {
     use CommandTrait;
 
-    /** @var string $defaults */
-    private $defaults;
+    private string $defaults;
 
     /**
      * @param Player $player
@@ -39,41 +40,43 @@ class CommandHotbar extends Hotbar
      */
     public function execute(Player $player, int $slot): void{
         $server = $player->getServer();
+        /** @var Main $plugin */
+        $plugin = $server->getPluginManager()->getPlugin('Hotbar');
         $commands = $this->getSlotCommands($slot);
         if($commands !== null) {
             foreach ($commands as $command) {
                 $commandData = explode('@', $command);
                 if (isset($commandData[0])) {
-                    $level = $player->getLevel();
+                    $level = $player->getWorld();
                     $command = $this->substituteString($commandData[0], [
                         'player' => '"' . $player->getName() . '"',
                         'tag' => $player->getNameTag(),
-                        'level' => $level !== null ? $level->getName() : 'Error',
-                        'x' => $player->getX(),
-                        'y' => $player->getY(),
-                        'z' => $player->getZ()
+                        'level' => $level !== null ? $level->getDisplayName() : 'Error',
+                        'x' => $player->getPosition()->getX(),
+                        'y' => $player->getPosition()->getY(),
+                        'z' => $player->getPosition()->getZ()
                     ], '{', '}');
 
                     if(!isset($commandData[1])) {
                         if(!isset($this->defaults))
-                            $this->defaults = $server->getPluginManager()->getPlugin('Hotbar')->getConfig()->get('Default Command Options');
+                            $this->defaults = $plugin->getConfig()->get('Default Command Options');
                         $commandData[1] = $this->defaults;
                     }
                     $executor = strtolower($commandData[1]);
                     switch ($executor) {
                         case 'console':
-                            $server->dispatchCommand(new ConsoleCommandSender(), $command);
+                            $server->dispatchCommand(new ConsoleCommandSender($server, $server->getLanguage()), $command);
                             break;
                         case 'op':
-                            $opStatus = $player->isOp();
-                            $player->setOp(true);
+                            $opStatus = $player->hasPermission(DefaultPermissions::ROOT_OPERATOR);
+                            $player->addAttachment($plugin, DefaultPermissions::ROOT_OPERATOR, true);
                         case 'player':
                             $server->dispatchCommand($player, $command);
                             if(isset($opStatus) && $opStatus !== true)
-                                $player->setOp(false);
+                                $player->addAttachment($plugin, DefaultPermissions::ROOT_OPERATOR, false);
                             break;
                         default:
-                            $server->getPluginManager()->getPlugin('Hotbar')->getLogger()->error("Invalid executor $executor! Please remove the @$executor or replace $executor with player, op or server!");
+                            $plugin->getLogger()->error("Invalid executor $executor! Please remove the @$executor or replace $executor with player, op or server!");
                     }
                 }
             }
@@ -88,7 +91,7 @@ class CommandHotbar extends Hotbar
      */
     public function substituteString(string $string, array $replace, string $prefix, string $suffix): string {
         foreach ($replace as $replaceMe => $with) {
-            $string = str_ireplace($prefix . $replaceMe . $suffix, $with, $string);
+            $string = str_ireplace($prefix . $replaceMe . $suffix, (string)$with, $string);
         }
         return $string;
     }

@@ -16,9 +16,13 @@ use ARTulloss\Hotbar\Events\Listener;
 use ARTulloss\Hotbar\Factory\HotbarFactory;
 use ARTulloss\Hotbar\Types\CommandHotbar;
 use ARTulloss\Hotbar\Types\HotbarInterface;
-use pocketmine\nbt\tag\ListTag;
+use pocketmine\data\bedrock\EnchantmentIdMap;
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\ItemFlags;
+use pocketmine\item\enchantment\Rarity;
+use pocketmine\item\ItemFactory;
 use pocketmine\plugin\PluginBase;
-use pocketmine\item\Item;
 use function explode;
 
 /**
@@ -33,15 +37,13 @@ use function explode;
 
 class Main extends PluginBase
 {
-	public const VERSION = '2.0.3';
-	public const CONFIG_VERSION = '3r8E{UGUDgX)~gba';
+	public const VERSION = '2.0.6';
+	public const CONFIG_VERSION = '64GrpQ}g}gs4j1';
 
-	/** @var HotbarLevels $hotbarLevels */
-	private $hotbarLevels;
-	/** @var HotbarUserAccessor */
-	private $hotbarUsers;
+	private HotbarLevels $hotbarLevels;
+	private HotbarUserAccessor $hotbarUsers;
 	/** @var HotbarInterface[] $hotbars */
-	private $hotbars;
+	private array $hotbars;
 
 	public function onEnable(): void {
         $server = $this->getServer();
@@ -52,11 +54,12 @@ class Main extends PluginBase
         }
 		$server->getCommandMap()->register("hotbar", new HotbarCommand('hotbar', $this));
 		$server->getPluginManager()->registerEvents(new Listener($this), $this);
-		$this->hotbarLevels = new HotbarLevels($this);
+		$this->hotbarLevels = new HotbarLevels();
 		$this->hotbarUsers = new HotbarUserAccessor();
 		$this->registerHotbars();
 		$this->registerHotbarWorlds();
 	}
+
 	public function registerHotbars(): void{
 	    $hotbars = $this->getConfig()->get('Hotbars');
 	    foreach ($hotbars as $hotbarName => $hotbar) {
@@ -70,12 +73,14 @@ class Main extends PluginBase
                     continue;
                 }
 
-                $item = Item::get((int)$itemArray[0], (int)$itemArray[1], (int)$itemArray[2]);
+                $item = ItemFactory::getInstance()->get((int)$itemArray[0], (int)$itemArray[1], (int)$itemArray[2]);
                 $item->setCustomName($itemName);
                 $item->setLore($itemData['Lore']);
                 if($itemData['Enchant'])
-                    $item->setNamedTagEntry(new ListTag('ench'));
-                $items[$itemData['Slot']] = $item;
+                    $e = new Enchantment("", Rarity::MYTHIC, ItemFlags::ALL, ItemFlags::ALL, 1);
+                    EnchantmentIdMap::getInstance()->register(-1, $e);
+                    $item->addEnchantment(new EnchantmentInstance($e));
+                    $items[$itemData['Slot']] = $item;
                 $commands = $itemData['Commands'];
                 $slot = $itemData['Slot'];
                 $hotbarCommands[$slot] = $commands;
@@ -94,8 +99,9 @@ class Main extends PluginBase
     }
     public function registerHotbarWorlds(): void{
 	    $server = $this->getServer();
+	    $worldMngr = $server->getWorldManager();
 	    foreach ($this->getConfig()->get('Worlds') as $levelName => $hotbarName) {
-	        if($server->loadLevel($levelName) && ($level = $server->getLevelByName($levelName)) && $level !== null) {
+	        if($worldMngr->loadWorld($levelName) && ($level = $worldMngr->getWorldByName($levelName)) && $level !== null) {
                 if(isset($this->hotbars[$hotbarName]))
                     $this->getHotbarLevels()->bindLevelToHotbar($level, $this->hotbars[$hotbarName]);
                 else
