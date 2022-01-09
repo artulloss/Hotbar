@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace ARTulloss\Hotbar\Types;
 
 use ARTulloss\Hotbar\Types\Traits\ClosureTrait;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 /**
  *  _  _  __ _____ __  __  ___

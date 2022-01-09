@@ -12,7 +12,7 @@ namespace ARTulloss\Hotbar\Accessor;
 use ARTulloss\Hotbar\Events\LoseHotbarEvent;
 use ARTulloss\Hotbar\HotbarUser;
 use ARTulloss\Hotbar\Types\HotbarInterface;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use ReflectionException;
 
 /**
@@ -27,8 +27,8 @@ use ReflectionException;
 
 class HotbarUserAccessor
 {
-    /** @var HotbarUser $users */
-    private $users;
+    /** @var HotbarUser[] */
+    private array $users;
     /**
      * @param Player $player
      * @param HotbarInterface $hotbar

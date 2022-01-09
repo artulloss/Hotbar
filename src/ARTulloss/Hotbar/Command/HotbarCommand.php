@@ -11,11 +11,14 @@ namespace ARTulloss\Hotbar\Command;
 
 use ARTulloss\Hotbar\Events\LoseHotbarEvent;
 use ARTulloss\Hotbar\Types\HotbarInterface;
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginOwned;
+use pocketmine\plugin\PluginOwnedTrait;
 use pocketmine\utils\TextFormat;
 use ARTulloss\Hotbar\Main;
 use function count;
@@ -31,7 +34,9 @@ use function count;
  * @link https://github.com/artulloss
  */
 
-class HotbarCommand extends PluginCommand {
+class HotbarCommand extends Command implements PluginOwned {
+
+    use PluginOwnedTrait;
 
     private const MESSAGE = TextFormat::BLUE . 'Hotbar v' . Main::VERSION . ' by ARTulloss';
 
@@ -41,7 +46,8 @@ class HotbarCommand extends PluginCommand {
      * @param Plugin $owner
      */
     public function __construct(string $name, Plugin $owner) {
-        parent::__construct($name, $owner);
+        $this->owningPlugin = $owner;
+        parent::__construct($name);
         $this->setDescription(self::MESSAGE);
         $this->setUsage('/hotbar {clear} | {list} | {world} {player}');
     }
@@ -68,16 +74,16 @@ class HotbarCommand extends PluginCommand {
         if(isset($args[0])) {
 
             /** @var Main $plugin */
-            $plugin = $this->getPlugin();
+            $plugin = $this->getOwningPlugin();
 
             if(isset($args[1]))
                 $player = $server->getPlayerExact($args[1]);
 
-            if(isset($player) && $player !== null) {
+            if(isset($player)) {
                 $hotbarUser = $plugin->getHotbarUsers()->getHotbarFor($player);
                 switch ($args[0]) {
                     case '{world}':
-                        $level = $player->getLevel();
+                        $level = $player->getWorld();
                         $hotbar = $plugin->getHotbarLevels()->getHotbarForLevel($level);
                         $hotbarUser->setHotbar($hotbar);
                         break;

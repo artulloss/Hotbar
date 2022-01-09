@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace ARTulloss\Hotbar;
 
 use ARTulloss\Hotbar\Types\HotbarInterface;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 /**
  *  _  _  __ _____ __  __  ___
@@ -24,12 +24,10 @@ use pocketmine\Player;
 
 class HotbarUser
 {
-    /** @var Player $player */
-    private $player;
-    /** @var HotbarInterface $hotbar */
-    private $hotbar;
-    /** @var int $lastUsage */
-    private $lastUsage = 0;
+
+    private Player $player;
+    private HotbarInterface $hotbar;
+    private int $lastUsage = 0;
     /**
      * HotbarUser constructor.
      * @param Player $player

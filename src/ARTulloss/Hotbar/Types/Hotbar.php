@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace ARTulloss\Hotbar\Types;
 
 use pocketmine\item\Item;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 use function array_keys;
 
@@ -27,9 +27,8 @@ use function array_keys;
 abstract class Hotbar implements HotbarInterface
 {
     /** @var Item[] $items */
-    private $items;
-    /** @var string $name */
-    private $name;
+    private array $items;
+    private string $name;
     protected const INVALID_SLOT = 'Slot must be between 1 and 9';
 
     /**

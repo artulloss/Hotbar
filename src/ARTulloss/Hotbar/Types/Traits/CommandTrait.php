@@ -24,7 +24,7 @@ use pocketmine\Server;
 trait CommandTrait
 {
     /** @var string[] $commands */
-    private $commands;
+    private array $commands;
     /**
      * @param int $slot
      * @param string[] $commands

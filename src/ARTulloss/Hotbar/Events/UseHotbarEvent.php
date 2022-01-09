@@ -25,10 +25,8 @@ use pocketmine\event\Event;
 
 class UseHotbarEvent extends Event
 {
-    /** @var HotbarUser $hotbarUser */
-    private $hotbarUser;
-    /** @var int $slot */
-    private $slot;
+    private HotbarUser $hotbarUser;
+    private int $slot;
     /**
      * UseHotbarEvent constructor.
      * @param HotbarUser $hotbarUser

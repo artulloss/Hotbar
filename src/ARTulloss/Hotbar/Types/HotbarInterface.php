@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace ARTulloss\Hotbar\Types;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\item\Item;
 
 /**

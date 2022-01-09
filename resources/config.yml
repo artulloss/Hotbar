@@ -35,16 +35,11 @@ Locked Inventory:
   - Spawn
 # - another world
 
-# The cooldown "fixes" the issue with interactions where Windows 10 spams the interact event
-# This is in ticks, I recommend 10 ticks
-
-Cooldown: 10
-
 # Don't modify this unless you update the plugin and it says the configuration needs to be updated
 # In that case, copy this from the updated configuration and make the necessary changes to your configuration
 
 # Make sure you add in the Enchant part for each item, previously this was missing, it was a mistake.
 # Please change Default-Command-Options to Default Command Options, this is a consistency fix for the configuration.
 
-Config Version: 3r8E{UGUDgX)~gba
+Config Version: 64GrpQ}g}gs4j1
 ...
