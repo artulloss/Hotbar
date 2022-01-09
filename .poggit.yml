@@ -4,4 +4,6 @@ branches:
 projects:
   Hotbar:
     path: ""
+    lint:
+      phpstan: false
 ...
