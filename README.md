@@ -109,5 +109,4 @@ So far:
 To see this plugin in action, you can join my server: versai.pro 19132
 
 #### Support?
-Tweet me [@artulloss](https://twitter.com/artulloss)
-Discord [here](https://discord.versai.pro)
+Add Discord: adam#9876
